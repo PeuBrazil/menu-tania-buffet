@@ -14,7 +14,7 @@ export default function Home() {
 
   const getGeneralWhatsAppLink = () => {
     const text = encodeURIComponent(
-      "Olá! Estava vendo o cardápio e gostaria de fazer uma encomenda."
+      "Olá, Tânia! Acessei o cardápio online e gostaria de fazer um orçamento para um evento."
     );
     return `https://wa.me/${whatsappNumber}?text=${text}`;
   };
