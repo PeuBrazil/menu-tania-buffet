@@ -29,4 +29,4 @@ Desenvolvi um catálogo digital em formato de Single Page Application (SPA). O f
 Embora meu foco de atuação profissional envolva o desenvolvimento e a sustentação de regras de negócio robustas no backend, este projeto demonstra minha capacidade de atuar com autonomia no ecossistema frontend. Ele reflete minha visão de produto: entender a dor do cliente real, aplicar regras de negócio no lado do cliente e entregar um software focado em usabilidade, performance e conversão.
 
 ---
-*Desenvolvido com dedicação por João Pedro/ PeuBrazil*
+*Desenvolvido com dedicação por PeuBrazil*
