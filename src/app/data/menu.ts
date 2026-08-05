@@ -131,7 +131,7 @@ export const menuData: MenuSection[] = [
     ]
   },
   {
-    category: "Tortas Salgadas (30cm)",
+    category: "Tortas Salgadas",
     color: "bg-transparent",
     items: [
       { id: "torta-bacalhau", name: "Bacalhau", description: "Torta salgada de 30cm", price: 240.00 },
