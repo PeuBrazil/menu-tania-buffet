@@ -1,17 +1,93 @@
 @import "tailwindcss";
 
-@theme {
-  --color-brand-bg: #EBE3D5; 
-  --color-brand-text: #4A332A;
-  --color-brand-primary: #C56D53;
-  --color-brand-primary-hover: #A85A43;
-  --color-brand-card: #FDFBFA; 
+:root {
+  --brand-bg: #F5EFE6;
+  --brand-bg-alt: #EBE1D1;
+  --brand-surface-subtle: #FBF7F0;
+  --brand-text: #4A332A;
+  --brand-heading: #352119;
+  --brand-muted: #72554A;
+  --brand-primary: #C2593F;
+  --brand-primary-hover: #A6462E;
+  --brand-gold: #D4953B;
+  --brand-sage: #3E6B48;
+  --brand-card: #FFFDF9;
+  --brand-border: #E4D6C3;
+  --brand-espresso: #352119;
+  --brand-warning-bg: #FFF8EB;
+  --brand-warning-border: #E6C891;
+  --brand-dot-color: rgba(74, 51, 42, 0.04);
+  --brand-leader-color: rgba(74, 51, 42, 0.28);
+}
 
-  --color-cat-salgados: #D8CCA3;
-  --color-cat-doces: #E3C4B6;
+.dark {
+  --brand-bg: #170F0B;
+  --brand-bg-alt: #241812;
+  --brand-surface-subtle: #1F140F;
+  --brand-text: #EFE5D8;
+  --brand-heading: #FFFBF5;
+  --brand-muted: #BCA493;
+  --brand-primary: #D96B4E;
+  --brand-primary-hover: #E87D60;
+  --brand-gold: #E8B55B;
+  --brand-sage: #589466;
+  --brand-card: #221610;
+  --brand-border: #3B281E;
+  --brand-espresso: #2B1C14;
+  --brand-warning-bg: #2A1D12;
+  --brand-warning-border: #6B4D23;
+  --brand-dot-color: rgba(245, 239, 230, 0.035);
+  --brand-leader-color: rgba(239, 229, 216, 0.25);
+}
+
+@theme inline {
+  --font-serif: var(--font-serif-display), Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-sans: var(--font-sans-body), system-ui, -apple-system, sans-serif;
+
+  --color-brand-bg: var(--brand-bg);
+  --color-brand-bg-alt: var(--brand-bg-alt);
+  --color-brand-surface-subtle: var(--brand-surface-subtle);
+  --color-brand-text: var(--brand-text);
+  --color-brand-heading: var(--brand-heading);
+  --color-brand-muted: var(--brand-muted);
+  --color-brand-primary: var(--brand-primary);
+  --color-brand-primary-hover: var(--brand-primary-hover);
+  --color-brand-gold: var(--brand-gold);
+  --color-brand-sage: var(--brand-sage);
+  --color-brand-card: var(--brand-card);
+  --color-brand-border: var(--brand-border);
+  --color-brand-espresso: var(--brand-espresso);
 }
 
 body {
-  background-color: var(--color-brand-bg);
-  color: var(--color-brand-text);
+  background-color: var(--brand-bg);
+  color: var(--brand-text);
+  font-family: var(--font-sans);
+  background-image: 
+    radial-gradient(at 15% 10%, rgba(212, 149, 59, 0.08) 0px, transparent 45%),
+    radial-gradient(at 85% 25%, rgba(194, 89, 63, 0.07) 0px, transparent 50%),
+    radial-gradient(var(--brand-dot-color) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 24px 24px;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+/* Linha pontilhada clássica de cardápio de bistrô */
+.menu-dotted-leader {
+  background-image: radial-gradient(circle, var(--brand-leader-color) 1.25px, transparent 1.5px);
+  background-position: bottom;
+  background-size: 8px 2px;
+  background-repeat: repeat-x;
+}
+
+@keyframes floatSlow {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(2deg);
+  }
+}
+
+.animate-float-slow {
+  animation: floatSlow 7s ease-in-out infinite;
 }

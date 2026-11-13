@@ -1,29 +1,34 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Fraunces, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const fraunces = Fraunces({
+  variable: "--font-serif-display",
   subsets: ["latin"],
+  display: "swap",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const jakarta = Plus_Jakarta_Sans({
+  variable: "--font-sans-body",
   subsets: ["latin"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "Buffet da Tânia | Cardápio",
-  description: "Salgados, doces e tortas feitos à mão com capricho e receita de família.",
+  title: "Buffet da Tânia | Cardápio Artesanal para Festas e Eventos",
+  description:
+    "Salgados fritos, assados de forno, doces finos, tortas salgadas e vinagretes feitos à mão com capricho e receita de família.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      lang="pt-BR"
+      className={`${fraunces.variable} ${jakarta.variable} h-full antialiased scroll-smooth`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col selection:bg-brand-primary/20 selection:text-brand-text">
+        {children}
+      </body>
     </html>
   );
 }
