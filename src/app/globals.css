@@ -14,6 +14,8 @@
   --brand-card: #FFFDF9;
   --brand-border: #E4D6C3;
   --brand-espresso: #352119;
+  --brand-selected-bg: #352119;
+  --brand-selected-text: #FFFDF9;
   --brand-warning-bg: #FFF8EB;
   --brand-warning-border: #E6C891;
   --brand-dot-color: rgba(74, 51, 42, 0.04);
@@ -22,18 +24,20 @@
 
 .dark {
   --brand-bg: #170F0B;
-  --brand-bg-alt: #241812;
+  --brand-bg-alt: #261A13;
   --brand-surface-subtle: #1F140F;
   --brand-text: #EFE5D8;
   --brand-heading: #FFFBF5;
-  --brand-muted: #BCA493;
-  --brand-primary: #D96B4E;
-  --brand-primary-hover: #E87D60;
+  --brand-muted: #C2AA98;
+  --brand-primary: #DF6E50;
+  --brand-primary-hover: #EC8164;
   --brand-gold: #E8B55B;
-  --brand-sage: #589466;
+  --brand-sage: #64A673;
   --brand-card: #221610;
-  --brand-border: #3B281E;
+  --brand-border: #422D22;
   --brand-espresso: #2B1C14;
+  --brand-selected-bg: #F5EFE6;
+  --brand-selected-text: #221610;
   --brand-warning-bg: #2A1D12;
   --brand-warning-border: #6B4D23;
   --brand-dot-color: rgba(245, 239, 230, 0.035);
@@ -57,6 +61,8 @@
   --color-brand-card: var(--brand-card);
   --color-brand-border: var(--brand-border);
   --color-brand-espresso: var(--brand-espresso);
+  --color-brand-selected: var(--brand-selected-bg);
+  --color-brand-selected-text: var(--brand-selected-text);
 }
 
 html,

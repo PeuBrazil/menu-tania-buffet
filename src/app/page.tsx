@@ -15,8 +15,8 @@ const badgeStyles: Record<string, string> = {
   "Mais Pedido": "bg-brand-primary/15 text-brand-primary border-brand-primary/30",
   "Mais Pedida": "bg-brand-primary/15 text-brand-primary border-brand-primary/30",
   Favorito: "bg-brand-gold/20 text-brand-gold border-brand-gold/40",
-  Premium: "bg-brand-espresso text-[#FFFDF9] border-brand-espresso",
-  Gourmet: "bg-brand-espresso text-[#FFFDF9] border-brand-espresso",
+  Premium: "bg-brand-selected text-brand-selected-text border-brand-selected",
+  Gourmet: "bg-brand-selected text-brand-selected-text border-brand-selected",
   Especial: "bg-brand-gold/15 text-brand-gold border-brand-gold/35",
   "Especial 30cm": "bg-brand-gold/15 text-brand-gold border-brand-gold/35",
   Agridoce: "bg-brand-sage/15 text-brand-sage border-brand-sage/30",
@@ -1006,18 +1006,18 @@ export default function Home() {
                   onClick={() => handleCategoryChange(section.category)}
                   className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl border text-xs font-bold whitespace-nowrap shrink-0 transition-all cursor-pointer ${
                     isActive
-                      ? "bg-brand-espresso text-[#FFFDF9] border-brand-espresso shadow-sm"
+                      ? "bg-brand-selected text-brand-selected-text border-brand-selected shadow-sm"
                       : "bg-brand-card text-brand-heading border-brand-border"
                   }`}
                 >
                   <CategoryIcon
                     category={section.category}
-                    className={`w-4 h-4 ${isActive ? "text-[#E6B35A]" : "text-brand-primary"}`}
+                    className="w-4 h-4 text-brand-primary"
                   />
                   <span>{section.category}</span>
                   <span
-                    className={`text-[10px] px-1.5 py-0.5 rounded-full ${
-                      isActive ? "bg-white/15 text-[#E6B35A]" : "bg-brand-bg text-brand-muted"
+                    className={`text-[10px] px-1.5 py-0.5 rounded-full font-extrabold ${
+                      isActive ? "bg-brand-primary text-white" : "bg-brand-bg text-brand-muted"
                     }`}
                   >
                     {section.items.length}
@@ -1038,7 +1038,7 @@ export default function Home() {
                   onClick={() => handleCategoryChange(section.category)}
                   className={`group flex flex-col justify-between p-4 rounded-2xl border text-left transition-all cursor-pointer ${
                     isActive
-                      ? "bg-brand-espresso text-[#FFFDF9] border-brand-espresso shadow-md -translate-y-0.5"
+                      ? "bg-brand-selected text-brand-selected-text border-brand-selected shadow-md -translate-y-0.5"
                       : "bg-brand-card hover:bg-brand-surface-subtle text-brand-heading border-brand-border hover:border-brand-primary/50 shadow-2xs"
                   }`}
                 >
@@ -1055,7 +1055,7 @@ export default function Home() {
                     <span
                       className={`text-xs font-bold px-2.5 py-0.5 rounded-full ${
                         isActive
-                          ? "bg-white/15 text-[#E6B35A]"
+                          ? "bg-brand-primary text-white"
                           : "bg-brand-bg text-brand-muted"
                       }`}
                     >
@@ -1114,7 +1114,7 @@ export default function Home() {
                     onClick={() => setViewMode("grid")}
                     className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                       viewMode === "grid"
-                        ? "bg-brand-card text-brand-heading shadow-2xs"
+                        ? "bg-brand-selected text-brand-selected-text shadow-2xs"
                         : "text-brand-muted hover:text-brand-heading"
                     }`}
                   >
@@ -1131,7 +1131,7 @@ export default function Home() {
                     onClick={() => setViewMode("bistro")}
                     className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                       viewMode === "bistro"
-                        ? "bg-brand-card text-brand-heading shadow-2xs"
+                        ? "bg-brand-selected text-brand-selected-text shadow-2xs"
                         : "text-brand-muted hover:text-brand-heading"
                     }`}
                   >
@@ -1161,13 +1161,13 @@ export default function Home() {
                           normalizeText(prev.trim()) === normalizeText(flavor) ? "" : flavor
                         )
                       }
-                      className={`px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap shrink-0 transition-all cursor-pointer border ${
+                      className={`px-3.5 py-1.5 rounded-full text-xs whitespace-nowrap shrink-0 transition-all cursor-pointer border ${
                         isSelected
-                          ? "bg-brand-espresso text-[#FFFDF9] border-brand-espresso shadow-2xs"
-                          : "bg-brand-card hover:bg-brand-bg text-brand-text border-brand-border"
+                          ? "bg-brand-selected text-brand-selected-text border-brand-selected font-extrabold shadow-xs scale-[1.02]"
+                          : "bg-brand-card hover:bg-brand-bg text-brand-text border-brand-border font-semibold"
                       }`}
                     >
-                      {flavor}
+                      {isSelected ? `✓ ${flavor}` : flavor}
                     </button>
                   );
                 })}
@@ -1188,10 +1188,10 @@ export default function Home() {
                         key={sub}
                         type="button"
                         onClick={() => setActiveSubcategory(sub)}
-                        className={`px-3.5 py-1.5 rounded-full text-xs font-bold whitespace-nowrap shrink-0 transition-all cursor-pointer ${
+                        className={`px-3.5 py-1.5 rounded-full text-xs whitespace-nowrap shrink-0 transition-all cursor-pointer border ${
                           active
-                            ? "bg-brand-primary text-white shadow-2xs"
-                            : "bg-brand-bg text-brand-text hover:bg-brand-bg-alt"
+                            ? "bg-brand-selected text-brand-selected-text border-brand-selected font-extrabold shadow-xs"
+                            : "bg-brand-bg text-brand-text border-brand-border hover:bg-brand-bg-alt font-bold"
                         }`}
                       >
                         {sub}
@@ -1373,7 +1373,7 @@ export default function Home() {
                                             25
                                           )
                                         }
-                                        className="py-2 rounded-lg bg-brand-espresso hover:bg-brand-primary text-white font-extrabold text-xs active:scale-95 transition-all cursor-pointer"
+                                        className="py-2 rounded-lg bg-brand-selected text-brand-selected-text hover:bg-brand-primary hover:text-white font-extrabold text-xs active:scale-95 transition-all cursor-pointer"
                                       >
                                         +25
                                       </button>
@@ -1388,7 +1388,7 @@ export default function Home() {
                                             50
                                           )
                                         }
-                                        className="py-2 rounded-lg bg-brand-espresso hover:bg-brand-primary text-white font-extrabold text-xs active:scale-95 transition-all cursor-pointer"
+                                        className="py-2 rounded-lg bg-brand-selected text-brand-selected-text hover:bg-brand-primary hover:text-white font-extrabold text-xs active:scale-95 transition-all cursor-pointer"
                                       >
                                         +50
                                       </button>
