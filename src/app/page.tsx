@@ -294,23 +294,30 @@ export default function Home() {
             </div>
           </a>
 
-          <nav className="hidden lg:flex items-center gap-6 text-sm font-semibold text-brand-text/90">
-            <a href="#cardapio" className="hover:text-brand-primary transition-colors">
+          <nav className="hidden xl:flex items-center gap-5 text-sm font-semibold text-brand-text/90">
+            <a href="#cardapio" className="hover:text-brand-primary transition-colors whitespace-nowrap">
               Cardápio ({totalMenuItemsCount})
             </a>
-            <a href="#tortas-doces" className="hover:text-brand-primary transition-colors">
+            <a href="#tortas-doces" className="hover:text-brand-primary transition-colors whitespace-nowrap">
               Tortas Doces
             </a>
             <a
               href="#calculadora"
               onClick={() => setShowCalculator(true)}
-              className="hover:text-brand-primary transition-colors"
+              className="hover:text-brand-primary transition-colors whitespace-nowrap"
             >
               Calculadora de Festa
             </a>
-            <a href="#tradicao" className="hover:text-brand-primary transition-colors">
+            <a href="#tradicao" className="hover:text-brand-primary transition-colors whitespace-nowrap">
               Nossa Tradição
             </a>
+            <button
+              type="button"
+              onClick={() => setPdfPreviewMode("menu")}
+              className="hover:text-brand-primary transition-colors whitespace-nowrap cursor-pointer"
+            >
+              Cardápio em PDF
+            </button>
           </nav>
 
           <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
@@ -399,25 +406,35 @@ export default function Home() {
                     Salgados, doces e tortas feitos à mão, com aquele capricho de receita de família para levar o melhor sabor à sua festa.
                   </p>
 
-                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center lg:justify-start gap-2.5 sm:gap-3.5 mb-5 sm:mb-7">
+                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center lg:justify-start gap-2.5 mb-5 sm:mb-7">
                     <a
                       href="#cardapio"
-                      className="inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-2xl sm:rounded-full bg-brand-primary hover:bg-brand-primary-hover text-white font-bold text-sm sm:text-base shadow-md hover:shadow-lg transition-all"
+                      className="inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-2xl sm:rounded-full bg-brand-primary hover:bg-brand-primary-hover text-white font-bold text-xs sm:text-sm shadow-md hover:shadow-lg transition-all whitespace-nowrap"
                     >
                       <span>Explorar o Cardápio</span>
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" className="w-4 h-4">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" className="w-4 h-4 shrink-0">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
                       </svg>
                     </a>
                     <button
                       type="button"
                       onClick={() => setShowCalculator((prev) => !prev)}
-                      className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl sm:rounded-full bg-brand-bg-alt hover:bg-brand-border text-brand-heading font-bold text-sm sm:text-base transition-all cursor-pointer"
+                      className="inline-flex items-center justify-center gap-2 px-4 py-3.5 rounded-2xl sm:rounded-full bg-brand-bg-alt hover:bg-brand-border text-brand-heading font-bold text-xs sm:text-sm transition-all cursor-pointer whitespace-nowrap"
                     >
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4 text-brand-primary shrink-0">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
                       </svg>
-                      <span>Calcular Quantidade p/ Festa</span>
+                      <span>Calcular Quantidade</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setPdfPreviewMode("menu")}
+                      className="inline-flex items-center justify-center gap-2 px-4 py-3.5 rounded-2xl sm:rounded-full bg-brand-card hover:bg-brand-bg-alt text-brand-heading font-bold text-xs sm:text-sm border border-brand-border transition-all cursor-pointer whitespace-nowrap"
+                    >
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4 text-brand-primary shrink-0">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      </svg>
+                      <span>Cardápio em PDF</span>
                     </button>
                   </div>
 
