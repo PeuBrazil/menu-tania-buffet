@@ -15,9 +15,25 @@ const jakarta = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://menu-tania-buffet.vercel.app"),
   title: "Buffet da Tânia | Cardápio Artesanal para Festas e Eventos",
   description:
-    "Salgados fritos, assados de forno, doces finos, tortas salgadas e vinagretes feitos à mão com capricho e receita de família.",
+    "Salgados fritos, assados de forno, doces finos, tortas doces e salgadas e vinagretes feitos à mão com capricho e receita de família.",
+  openGraph: {
+    title: "Buffet da Tânia | Cardápio Artesanal para Festas e Eventos",
+    description:
+      "Salgados fritos, assados de forno, doces finos, tortas e vinagretes feitos à mão com capricho e receita de família.",
+    url: "https://menu-tania-buffet.vercel.app",
+    siteName: "Buffet da Tânia",
+    locale: "pt_BR",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Buffet da Tânia | Cardápio Artesanal para Festas e Eventos",
+    description:
+      "Salgados fritos, assados de forno, doces finos, tortas e vinagretes feitos à mão com capricho e receita de família.",
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
