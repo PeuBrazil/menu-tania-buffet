@@ -100,7 +100,6 @@ export function PdfPreviewModal({
               {isMenu ? (
                 <div className="space-y-6">
                   {menuData.map((section) => {
-                    const isUnit = section.unitLabel === "un";
                     return (
                       <div key={section.category}>
                         <div className="bg-[#352119] text-[#FFFDF9] px-3.5 py-2 rounded-lg flex items-baseline justify-between mb-3">
@@ -126,11 +125,6 @@ export function PdfPreviewModal({
                                   {item.price === 0
                                     ? "Sob consulta"
                                     : `R$ ${formatBRL(item.price)}/${section.unitLabel}`}
-                                  {item.price > 0 && isUnit && (
-                                    <span className="text-[10px] font-semibold text-[#72554A] ml-1">
-                                      (Cento: R$ {formatBRL(item.price * 100)})
-                                    </span>
-                                  )}
                                 </span>
                               </div>
                               {item.description && (
@@ -221,3 +215,4 @@ export function PdfPreviewModal({
     </div>
   );
 }
+

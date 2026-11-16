@@ -240,7 +240,7 @@ function drawMenuItemCell(
   doc: jsPDF,
   item: MenuItem,
   unitLabel: string,
-  isUnit: boolean,
+  _isUnit: boolean,
   x: number,
   y: number,
   width: number,
@@ -250,8 +250,6 @@ function drawMenuItemCell(
     item.price === 0
       ? "Sob consulta"
       : `R$ ${formatBRL(item.price)}/${unitLabel}`;
-  const centoStr =
-    item.price > 0 && isUnit ? ` (Cento: R$ ${formatBRL(item.price * 100)})` : "";
 
   // Nome do prato
   doc.setFont("times", "bold");
@@ -259,11 +257,11 @@ function drawMenuItemCell(
   doc.setTextColor(53, 33, 25); // #352119
   doc.text(item.name, x, y + 3.5);
 
-  // Preço alinhado à direita da coluna
+  // Preço unitário alinhado à direita da coluna
   doc.setFont("helvetica", "bold");
-  doc.setFontSize(8.5);
+  doc.setFontSize(9);
   doc.setTextColor(194, 89, 63); // #C2593F
-  doc.text(priceStr + centoStr, x + width, y + 3.5, { align: "right" });
+  doc.text(priceStr, x + width, y + 3.5, { align: "right" });
 
   // Descrição
   if (descLines.length > 0) {
