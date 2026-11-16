@@ -267,12 +267,12 @@ const rightMarginItems: Array<{
   { top: "94.5%", right: "58px", size: 62, rotate: -14, kind: "morango", color: "text-brand-gold" },
 ];
 
-/* Ilustrações gastronômicas distribuídas ao longo de toda a página (acompanham o scroll) */
+/* Ilustrações gastronômicas distribuídas ao longo de toda a página (visíveis apenas em telas amplas onde há margem lateral) */
 function MarginIllustrations() {
   return (
     <div
       aria-hidden="true"
-      className="pointer-events-none absolute inset-0 z-0 overflow-hidden hidden lg:block"
+      className="pointer-events-none absolute inset-0 z-0 overflow-hidden hidden xl:block"
     >
       {/* Coluna Esquerda */}
       {leftMarginItems.map((item, idx) => (
@@ -485,6 +485,14 @@ export default function Home() {
     });
   };
 
+  const handleDeleteFromCart = (itemId: string) => {
+    setCart((prev) => {
+      const clone = { ...prev };
+      delete clone[itemId];
+      return clone;
+    });
+  };
+
   const clearCart = () => setCart({});
 
   const cartEntries = useMemo(() => Object.values(cart), [cart]);
@@ -545,38 +553,38 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col text-brand-text relative">
-      {/* Ilustrações decorativas nas margens da página */}
+    <div className="min-h-screen w-full max-w-full overflow-x-hidden flex flex-col text-brand-text relative">
+      {/* Ilustrações decorativas nas margens da página (somente telas amplas xl+) */}
       <MarginIllustrations />
 
       {/* Faixa Superior de Aviso Artesanal */}
-      <div className="bg-brand-espresso text-[#F5EFE6] text-xs sm:text-sm py-2.5 px-4 text-center border-b border-white/10 relative z-20">
-        <div className="max-w-6xl mx-auto flex flex-wrap items-center justify-center gap-x-6 gap-y-1">
+      <div className="bg-brand-espresso text-[#F5EFE6] text-[11px] sm:text-sm py-2 px-3 sm:px-4 text-center border-b border-white/10 relative z-20">
+        <div className="max-w-6xl mx-auto flex flex-wrap items-center justify-center gap-x-4 gap-y-0.5">
           <span className="inline-flex items-center gap-1.5 font-medium">
-            <span className="text-[#E6B35A]">✦</span> Produção 100% artesanal e sob encomenda
+            <span className="text-[#E6B35A]">✦</span> Produção artesanal sob encomenda
           </span>
           <span className="hidden sm:inline text-white/30">|</span>
-          <span className="opacity-90">
-            Alguns itens possuem quantidade mínima por sabor — consulte pelo WhatsApp
+          <span className="opacity-90 hidden xs:inline">
+            Alguns itens possuem quantidade mínima por sabor
           </span>
         </div>
       </div>
 
       {/* Cabeçalho / Navbar Sticky */}
-      <header className="sticky top-0 z-40 bg-brand-bg/90 backdrop-blur-md border-b border-brand-border transition-all">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-18 flex items-center justify-between gap-3">
-          <a href="#" className="flex items-center gap-3 group shrink-0">
-            <div className="w-10 h-10 rounded-full bg-brand-espresso text-[#F5EFE6] flex items-center justify-center shadow-sm group-hover:bg-brand-primary transition-colors">
-              <span className="font-serif font-bold text-xl tracking-tighter text-[#E6B35A] group-hover:text-white">
+      <header className="sticky top-0 z-40 bg-brand-bg/95 backdrop-blur-md border-b border-brand-border transition-all">
+        <div className="max-w-6xl mx-auto px-3 sm:px-6 lg:px-8 h-16 sm:h-18 flex items-center justify-between gap-2">
+          <a href="#" className="flex items-center gap-2.5 sm:gap-3 group min-w-0">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-brand-espresso text-[#F5EFE6] flex items-center justify-center shadow-sm group-hover:bg-brand-primary transition-colors shrink-0">
+              <span className="font-serif font-bold text-lg sm:text-xl tracking-tighter text-[#E6B35A] group-hover:text-white">
                 T
               </span>
             </div>
-            <div>
-              <span className="font-serif font-bold text-xl sm:text-2xl text-brand-heading tracking-tight block leading-none">
+            <div className="min-w-0">
+              <span className="font-serif font-bold text-lg sm:text-2xl text-brand-heading tracking-tight block leading-none truncate">
                 Buffet da Tânia
               </span>
-              <span className="text-[11px] uppercase tracking-[0.18em] text-brand-muted font-semibold block mt-1">
-                Sabor & Tradição em Festas
+              <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.14em] text-brand-muted font-semibold block mt-0.5 truncate">
+                Sabor & Tradição
               </span>
             </div>
           </a>
@@ -600,12 +608,12 @@ export default function Home() {
             </a>
           </nav>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
             {/* Botão de Modo Escuro / Claro */}
             <button
               type="button"
               onClick={toggleDarkMode}
-              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-full bg-brand-card border border-brand-border hover:border-brand-primary text-brand-heading text-xs font-bold shadow-2xs transition-all cursor-pointer"
+              className="inline-flex items-center justify-center gap-1.5 w-9 h-9 sm:w-auto sm:h-auto sm:px-3 sm:py-2 rounded-full bg-brand-card border border-brand-border hover:border-brand-primary text-brand-heading text-xs font-bold shadow-2xs transition-all cursor-pointer"
               aria-label={darkMode ? "Ativar modo claro" : "Ativar modo escuro"}
               title={darkMode ? "Mudar para modo claro" : "Mudar para modo escuro (Cacau)"}
             >
@@ -631,15 +639,15 @@ export default function Home() {
             <button
               type="button"
               onClick={() => setIsCartOpen(true)}
-              className="relative inline-flex items-center gap-2 px-3.5 py-2 rounded-full bg-brand-card border border-brand-border hover:border-brand-primary text-brand-heading text-xs sm:text-sm font-bold shadow-2xs transition-all cursor-pointer"
+              className="relative inline-flex items-center gap-1.5 px-3 py-2 rounded-full bg-brand-card border border-brand-border hover:border-brand-primary text-brand-heading text-xs sm:text-sm font-bold shadow-2xs transition-all cursor-pointer"
               aria-label="Abrir lista de orçamento"
             >
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4 text-brand-primary">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4 text-brand-primary shrink-0">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
               </svg>
-              <span className="hidden sm:inline">Minha Lista</span>
+              <span>Lista</span>
               <span
-                className={`px-2 py-0.5 rounded-full text-xs font-extrabold ${
+                className={`px-1.5 py-0.5 rounded-full text-[11px] font-extrabold leading-none ${
                   cartEntries.length > 0
                     ? "bg-brand-primary text-white"
                     : "bg-brand-bg-alt text-brand-muted"
@@ -653,9 +661,9 @@ export default function Home() {
               href={getGeneralWhatsAppLink()}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-espresso hover:bg-brand-primary text-[#FFFDF9] text-xs sm:text-sm font-bold shadow-sm transition-all"
+              className="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-espresso hover:bg-brand-primary text-[#FFFDF9] text-xs sm:text-sm font-bold shadow-sm transition-all"
             >
-              <span className="hidden xs:inline">Orçamento</span>
+              <span>Orçamento</span>
               <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-[#25D366]">
                 <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
               </svg>
@@ -665,39 +673,38 @@ export default function Home() {
       </header>
 
       <main className="flex-1 pb-28 relative z-10">
-        {/* 1. HERO SECTION */}
-        <section className="relative overflow-hidden pt-10 pb-14 sm:pt-14 sm:pb-18 border-b border-brand-border/70">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="bg-brand-card border border-brand-border rounded-[2rem] p-6 sm:p-10 lg:p-14 shadow-[0_20px_60px_-20px_rgba(74,51,42,0.14)] relative overflow-hidden">
-              {/* Ornamento sutil de canto */}
+        {/* 1. HERO SECTION (Mais enxuto no celular para chegar rápido ao cardápio) */}
+        <section className="relative overflow-hidden pt-5 pb-8 sm:pt-12 sm:pb-16 border-b border-brand-border/70">
+          <div className="max-w-6xl mx-auto px-3.5 sm:px-6 lg:px-8">
+            <div className="bg-brand-card border border-brand-border rounded-3xl sm:rounded-[2rem] p-5 sm:p-10 lg:p-14 shadow-[0_20px_60px_-20px_rgba(74,51,42,0.14)] relative overflow-hidden">
               <div className="hidden lg:block absolute -top-24 -right-24 w-72 h-72 rounded-full bg-brand-gold/10 blur-2xl pointer-events-none" />
               <div className="hidden lg:block absolute -bottom-24 -left-24 w-72 h-72 rounded-full bg-brand-primary/10 blur-2xl pointer-events-none" />
 
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center relative z-10">
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 items-center relative z-10">
                 {/* Coluna Principal de Texto */}
                 <div className="lg:col-span-7 text-center lg:text-left">
-                  <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-bg-alt border border-brand-border text-brand-heading text-xs font-bold uppercase tracking-widest mb-5">
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-bg-alt border border-brand-border text-brand-heading text-[11px] sm:text-xs font-bold uppercase tracking-widest mb-3.5 sm:mb-5">
                     <span className="text-brand-primary">★</span> Receitas de Família • Feito à Mão
                   </div>
 
-                  <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold text-brand-heading tracking-tight leading-[1.08] mb-5">
+                  <h1 className="font-serif text-3xl sm:text-5xl lg:text-6xl font-bold text-brand-heading tracking-tight leading-[1.1] mb-3.5 sm:mb-5">
                     Buffet da Tânia
-                    <span className="block text-2xl sm:text-3xl lg:text-4xl font-normal italic text-brand-primary mt-2">
+                    <span className="block text-xl sm:text-3xl lg:text-4xl font-normal italic text-brand-primary mt-1.5 sm:mt-2">
                       Capricho artesanal em cada detalhe da sua festa
                     </span>
                   </h1>
 
-                  <p className="text-base sm:text-lg text-brand-muted leading-relaxed max-w-2xl mx-auto lg:mx-0 mb-7">
+                  <p className="text-sm sm:text-lg text-brand-muted leading-relaxed max-w-2xl mx-auto lg:mx-0 mb-5 sm:mb-7">
                     Salgados, doces e tortas feitos à mão, com aquele capricho de receita de família para levar o melhor sabor à sua festa.
                   </p>
 
                   {/* Botões de Ação */}
-                  <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3.5 mb-7">
+                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center lg:justify-start gap-2.5 sm:gap-3.5 mb-5 sm:mb-7">
                     <a
                       href="#cardapio"
-                      className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-full bg-brand-primary hover:bg-brand-primary-hover text-white font-bold text-sm sm:text-base shadow-md hover:shadow-lg transition-all"
+                      className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl sm:rounded-full bg-brand-primary hover:bg-brand-primary-hover text-white font-bold text-sm sm:text-base shadow-md transition-all"
                     >
-                      <span>Explorar o Cardápio</span>
+                      <span>Ver Cardápio Completo</span>
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" className="w-4 h-4">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
                       </svg>
@@ -705,9 +712,9 @@ export default function Home() {
                     <button
                       type="button"
                       onClick={() => setShowCalculator((prev) => !prev)}
-                      className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-brand-bg-alt hover:bg-brand-border text-brand-heading font-bold text-sm sm:text-base transition-all cursor-pointer"
+                      className="inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-2xl sm:rounded-full bg-brand-bg-alt hover:bg-brand-border text-brand-heading font-bold text-sm sm:text-base transition-all cursor-pointer"
                     >
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4 text-brand-primary">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4 text-brand-primary shrink-0">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
                       </svg>
                       <span>Calcular Quantidade p/ Festa</span>
@@ -720,17 +727,17 @@ export default function Home() {
                       backgroundColor: "var(--brand-warning-bg)",
                       borderColor: "var(--brand-warning-border)",
                     }}
-                    className="inline-flex items-start sm:items-center gap-3 text-left border text-brand-heading px-4 py-3 rounded-2xl text-xs sm:text-sm shadow-2xs"
+                    className="inline-flex items-start sm:items-center gap-2.5 text-left border text-brand-heading px-3.5 py-2.5 sm:px-4 sm:py-3 rounded-2xl text-xs sm:text-sm shadow-2xs"
                   >
-                    <span className="text-lg leading-none shrink-0 mt-0.5 sm:mt-0">⚠️</span>
+                    <span className="text-base leading-none shrink-0 mt-0.5 sm:mt-0">⚠️</span>
                     <span>
                       <strong>Pedidos sob encomenda:</strong> alguns itens possuem quantidade mínima por sabor (consulte pelo WhatsApp).
                     </span>
                   </div>
                 </div>
 
-                {/* Coluna Direita: Vitrine de Destaques do Cardápio */}
-                <div className="lg:col-span-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-3">
+                {/* Coluna Direita: Vitrine de Destaques (Visível no Desktop para não alongar o topo no celular) */}
+                <div className="hidden lg:grid lg:col-span-5 grid-cols-1 gap-3">
                   <button
                     type="button"
                     onClick={() => {
@@ -751,7 +758,7 @@ export default function Home() {
                           Ver →
                         </span>
                       </div>
-                      <h3 className="font-serif font-bold text-base sm:text-lg text-brand-heading mt-0.5">
+                      <h3 className="font-serif font-bold text-lg text-brand-heading mt-0.5">
                         Salgados Fritos & de Forno
                       </h3>
                       <p className="text-xs text-brand-muted mt-0.5 line-clamp-2">
@@ -780,7 +787,7 @@ export default function Home() {
                           Ver →
                         </span>
                       </div>
-                      <h3 className="font-serif font-bold text-base sm:text-lg text-brand-heading mt-0.5">
+                      <h3 className="font-serif font-bold text-lg text-brand-heading mt-0.5">
                         Docinhos, Caramelados & Trufas
                       </h3>
                       <p className="text-xs text-brand-muted mt-0.5 line-clamp-2">
@@ -805,7 +812,7 @@ export default function Home() {
                           Conhecer →
                         </span>
                       </div>
-                      <h3 className="font-serif font-bold text-base sm:text-lg text-brand-heading mt-0.5">
+                      <h3 className="font-serif font-bold text-lg text-brand-heading mt-0.5">
                         Tortas Doces Personalizadas
                       </h3>
                       <p className="text-xs text-brand-muted mt-0.5 line-clamp-2">
@@ -834,7 +841,7 @@ export default function Home() {
                           Ver →
                         </span>
                       </div>
-                      <h3 className="font-serif font-bold text-base sm:text-lg text-brand-heading mt-0.5">
+                      <h3 className="font-serif font-bold text-lg text-brand-heading mt-0.5">
                         Tortas Salgadas & Vinagretes
                       </h3>
                       <p className="text-xs text-brand-muted mt-0.5 line-clamp-2">
@@ -849,34 +856,34 @@ export default function Home() {
               {showCalculator && (
                 <div
                   id="calculadora"
-                  className="mt-8 pt-8 border-t border-brand-border animate-in fade-in duration-200"
+                  className="mt-6 pt-6 border-t border-brand-border animate-in fade-in duration-200"
                 >
-                  <div className="bg-brand-bg rounded-2xl p-5 sm:p-6 border border-brand-border">
-                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-5">
+                  <div className="bg-brand-bg rounded-2xl p-4 sm:p-6 border border-brand-border">
+                    <div className="flex items-start justify-between gap-4 mb-4">
                       <div>
                         <span className="text-xs font-bold uppercase tracking-wider text-brand-primary">
                           Sugestão para Convidados
                         </span>
-                        <h3 className="font-serif text-xl sm:text-2xl font-bold text-brand-heading">
-                          Calculadora de Festa do Buffet da Tânia
+                        <h3 className="font-serif text-lg sm:text-2xl font-bold text-brand-heading">
+                          Calculadora de Festa
                         </h3>
                         <p className="text-xs sm:text-sm text-brand-muted mt-0.5">
-                          Média recomendada: <strong>10 salgados por pessoa</strong> (5 fritos e 5 de forno) e <strong>5 doces por pessoa</strong>.
+                          Média: <strong>10 salgados/pessoa</strong> (5 fritos + 5 de forno) e <strong>5 doces/pessoa</strong>.
                         </p>
                       </div>
                       <button
                         type="button"
                         onClick={() => setShowCalculator(false)}
-                        className="self-start md:self-center text-xs font-bold text-brand-muted hover:text-brand-heading underline cursor-pointer"
+                        className="text-xs font-bold text-brand-muted hover:text-brand-heading underline cursor-pointer shrink-0"
                       >
-                        Fechar guia
+                        Fechar
                       </button>
                     </div>
 
-                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 items-center">
                       <div className="lg:col-span-5 bg-brand-card p-4 rounded-xl border border-brand-border">
                         <label className="block text-xs font-bold uppercase tracking-wider text-brand-muted mb-2">
-                          Número de Convidados:{" "}
+                          Convidados:{" "}
                           <span className="text-brand-primary text-base font-extrabold">{guestCount} pessoas</span>
                         </label>
                         <input
@@ -888,16 +895,16 @@ export default function Home() {
                           onChange={(e) => setGuestCount(Number(e.target.value))}
                           className="w-full accent-[#C2593F] cursor-pointer"
                         />
-                        <div className="flex justify-between text-[11px] text-brand-muted font-semibold mt-2">
+                        <div className="grid grid-cols-6 gap-1 text-[11px] text-brand-muted font-semibold mt-2">
                           {[20, 30, 50, 80, 100, 150].map((num) => (
                             <button
                               key={num}
                               type="button"
                               onClick={() => setGuestCount(num)}
-                              className={`px-2 py-1 rounded-md transition-colors cursor-pointer ${
+                              className={`py-1.5 rounded-lg transition-colors cursor-pointer text-center ${
                                 guestCount === num
                                   ? "bg-brand-primary text-white font-bold"
-                                  : "hover:bg-brand-bg-alt"
+                                  : "bg-brand-bg hover:bg-brand-bg-alt"
                               }`}
                             >
                               {num}
@@ -906,39 +913,46 @@ export default function Home() {
                         </div>
                       </div>
 
-                      <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-3 gap-3">
-                        <div className="bg-brand-card p-4 rounded-xl border border-brand-border text-center">
-                          <span className="text-xs text-brand-muted font-semibold block">Total de Salgados</span>
-                          <strong className="font-serif text-2xl sm:text-3xl font-bold text-brand-heading block my-1">
-                            {guestCount * 10} <span className="text-sm font-normal">un</span>
+                      <div className="lg:col-span-7 grid grid-cols-3 gap-2 sm:gap-3">
+                        <div className="bg-brand-card p-3 sm:p-4 rounded-xl border border-brand-border text-center">
+                          <span className="text-[11px] sm:text-xs text-brand-muted font-semibold block">
+                            Salgados
+                          </span>
+                          <strong className="font-serif text-xl sm:text-3xl font-bold text-brand-heading block my-0.5 sm:my-1">
+                            {guestCount * 10}
                           </strong>
-                          <span className="text-[11px] text-brand-muted font-medium">
-                            {guestCount * 5} fritos + {guestCount * 5} de forno
+                          <span className="text-[10px] sm:text-[11px] text-brand-muted font-medium block">
+                            {guestCount * 5} fritos + {guestCount * 5} forno
                           </span>
                         </div>
-                        <div className="bg-brand-card p-4 rounded-xl border border-brand-border text-center">
-                          <span className="text-xs text-brand-muted font-semibold block">Docinhos & Trufas</span>
-                          <strong className="font-serif text-2xl sm:text-3xl font-bold text-brand-primary block my-1">
-                            {guestCount * 5} <span className="text-sm font-normal">un</span>
+                        <div className="bg-brand-card p-3 sm:p-4 rounded-xl border border-brand-border text-center">
+                          <span className="text-[11px] sm:text-xs text-brand-muted font-semibold block">
+                            Docinhos
+                          </span>
+                          <strong className="font-serif text-xl sm:text-3xl font-bold text-brand-primary block my-0.5 sm:my-1">
+                            {guestCount * 5}
                           </strong>
-                          <span className="text-[11px] text-brand-muted font-medium">5 doces por pessoa</span>
+                          <span className="text-[10px] sm:text-[11px] text-brand-muted font-medium block">
+                            5 por pessoa
+                          </span>
                         </div>
-                        <div className="bg-brand-card p-4 rounded-xl border border-brand-border text-center">
-                          <span className="text-xs text-brand-muted font-semibold block">Tortas Salgadas (30cm)</span>
-                          <strong className="font-serif text-2xl sm:text-3xl font-bold text-brand-gold block my-1">
-                            {Math.max(1, Math.ceil(guestCount / 25))}{" "}
-                            <span className="text-sm font-normal">
-                              {Math.max(1, Math.ceil(guestCount / 25)) === 1 ? "torta" : "tortas"}
-                            </span>
+                        <div className="bg-brand-card p-3 sm:p-4 rounded-xl border border-brand-border text-center">
+                          <span className="text-[11px] sm:text-xs text-brand-muted font-semibold block">
+                            Tortas 30cm
+                          </span>
+                          <strong className="font-serif text-xl sm:text-3xl font-bold text-brand-gold block my-0.5 sm:my-1">
+                            {Math.max(1, Math.ceil(guestCount / 25))}
                           </strong>
-                          <span className="text-[11px] text-brand-muted font-medium">Complemento ideal p/ mesa</span>
+                          <span className="text-[10px] sm:text-[11px] text-brand-muted font-medium block">
+                            Sugestão p/ mesa
+                          </span>
                         </div>
                       </div>
                     </div>
 
-                    <div className="mt-4 pt-4 border-t border-brand-border/70 flex flex-col sm:flex-row items-center justify-between gap-3">
-                      <span className="text-xs text-brand-muted">
-                        💡 Quer consultar um orçamento com base nessa quantidade para <strong>{guestCount} convidados</strong>?
+                    <div className="mt-4 pt-3.5 border-t border-brand-border/70 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5">
+                      <span className="text-xs text-brand-muted text-center sm:text-left">
+                        💡 Quer consultar um orçamento para <strong>{guestCount} convidados</strong>?
                       </span>
                       <a
                         href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
@@ -952,7 +966,7 @@ export default function Home() {
                         )}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-espresso hover:bg-brand-primary text-white text-xs font-bold transition-colors shrink-0"
+                        className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl sm:rounded-full bg-brand-espresso hover:bg-brand-primary text-white text-xs font-bold transition-colors"
                       >
                         <span>Orçar para {guestCount} pessoas no WhatsApp</span>
                         <span>→</span>
@@ -966,22 +980,55 @@ export default function Home() {
         </section>
 
         {/* 2. SEÇÃO DO CARDÁPIO */}
-        <section id="cardapio" className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-14 pb-12">
+        <section id="cardapio" className="max-w-6xl mx-auto px-3.5 sm:px-6 lg:px-8 pt-8 sm:pt-14 pb-12">
           {/* Título do Cardápio */}
-          <div className="text-center max-w-2xl mx-auto mb-10">
-            <span className="text-xs font-bold uppercase tracking-[0.2em] text-brand-primary block mb-2">
+          <div className="text-center max-w-2xl mx-auto mb-6 sm:mb-10">
+            <span className="text-[11px] sm:text-xs font-bold uppercase tracking-[0.2em] text-brand-primary block mb-1.5">
               Nosso Menu Completo
             </span>
-            <h2 className="font-serif text-3xl sm:text-4xl font-bold text-brand-heading tracking-tight">
+            <h2 className="font-serif text-2xl sm:text-4xl font-bold text-brand-heading tracking-tight">
               Cardápio de Encomendas
             </h2>
-            <p className="text-sm sm:text-base text-brand-muted mt-2">
-              Adicione quantidades de <strong className="text-brand-heading">+10, +25 ou +50 unidades</strong> na sua lista de orçamento e envie direto para o WhatsApp da Tânia.
+            <p className="text-xs sm:text-base text-brand-muted mt-1.5">
+              Toque em <strong className="text-brand-heading">+10, +25 ou +50</strong> nos seus itens preferidos para montar sua lista de orçamento.
             </p>
           </div>
 
-          {/* Abas de Categoria Estilo Cardápio */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 mb-8">
+          {/* SELETOR DE CATEGORIAS MOBILE (Swipe Horizontal) + DESKTOP (Grade 5 colunas) */}
+          {/* Versão Mobile: Barra horizontal deslizante super prática */}
+          <div className="flex sm:hidden items-center gap-2 overflow-x-auto no-scrollbar pb-2 mb-4 -mx-3.5 px-3.5">
+            {menuData.map((section) => {
+              const isActive = activeTab === section.category && searchQuery.trim() === "";
+              return (
+                <button
+                  key={section.category}
+                  type="button"
+                  onClick={() => handleCategoryChange(section.category)}
+                  className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl border text-xs font-bold whitespace-nowrap shrink-0 transition-all cursor-pointer ${
+                    isActive
+                      ? "bg-brand-espresso text-[#FFFDF9] border-brand-espresso shadow-sm"
+                      : "bg-brand-card text-brand-heading border-brand-border"
+                  }`}
+                >
+                  <CategoryIcon
+                    category={section.category}
+                    className={`w-4 h-4 ${isActive ? "text-[#E6B35A]" : "text-brand-primary"}`}
+                  />
+                  <span>{section.category}</span>
+                  <span
+                    className={`text-[10px] px-1.5 py-0.5 rounded-full ${
+                      isActive ? "bg-white/15 text-[#E6B35A]" : "bg-brand-bg text-brand-muted"
+                    }`}
+                  >
+                    {section.items.length}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Versão Tablet/Desktop: Cartões de Categoria */}
+          <div className="hidden sm:grid sm:grid-cols-3 lg:grid-cols-5 gap-3 mb-8">
             {menuData.map((section) => {
               const isActive = activeTab === section.category && searchQuery.trim() === "";
               return (
@@ -1026,8 +1073,8 @@ export default function Home() {
           </div>
 
           {/* Barra de Busca, Filtros Rápidos e Alternador de Visualização */}
-          <div className="bg-brand-card border border-brand-border rounded-2xl p-4 sm:p-5 mb-8 shadow-xs">
-            <div className="flex flex-col md:flex-row gap-3.5 items-stretch md:items-center justify-between">
+          <div className="bg-brand-card border border-brand-border rounded-2xl p-3.5 sm:p-5 mb-6 sm:mb-8 shadow-xs">
+            <div className="flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between">
               {/* Campo de Busca */}
               <div className="relative flex-1">
                 <svg
@@ -1044,14 +1091,14 @@ export default function Home() {
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Buscar por sabor ou prato (ex: camarão, queijo, chocolate, limão, bacalhau...)"
-                  className="w-full pl-10 pr-16 py-2.5 rounded-xl bg-brand-bg/70 border border-brand-border focus:border-brand-primary focus:bg-brand-card focus:outline-none text-sm text-brand-heading placeholder:text-brand-muted/70 transition-all"
+                  placeholder="Buscar sabor ou prato (ex: camarão, queijo, limão...)"
+                  className="w-full pl-9 pr-16 py-2.5 rounded-xl bg-brand-bg/70 border border-brand-border focus:border-brand-primary focus:bg-brand-card focus:outline-none text-sm text-brand-heading placeholder:text-brand-muted/70 transition-all"
                 />
                 {searchQuery && (
                   <button
                     type="button"
                     onClick={() => setSearchQuery("")}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold text-brand-muted hover:text-brand-heading px-1.5 py-0.5 rounded cursor-pointer"
+                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs font-bold text-brand-primary px-2 py-1 rounded cursor-pointer"
                   >
                     Limpar
                   </button>
@@ -1060,7 +1107,7 @@ export default function Home() {
 
               {/* Alternador de Visualização (Cartões vs Lista de Bistrô) */}
               <div className="flex items-center justify-between sm:justify-end gap-2 shrink-0">
-                <span className="text-xs font-semibold text-brand-muted mr-1">Exibição:</span>
+                <span className="text-xs font-semibold text-brand-muted">Modo de visão:</span>
                 <div className="inline-flex rounded-xl bg-brand-bg p-1 border border-brand-border">
                   <button
                     type="button"
@@ -1091,79 +1138,78 @@ export default function Home() {
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-3.5 h-3.5">
                       <path strokeLinecap="round" d="M4 6h16M4 12h16M4 18h16" />
                     </svg>
-                    Lista Clássica
+                    Compacta
                   </button>
                 </div>
               </div>
             </div>
 
-            {/* Filtros Rápidos por Sabor */}
-            <div className="flex items-center gap-1.5 flex-wrap mt-3.5 pt-3 border-t border-brand-border/70">
-              <span className="text-xs font-bold text-brand-muted mr-1">Filtrar por sabor:</span>
-              {quickFlavors.map((flavor) => {
-                const isSelected = normalizeText(searchQuery.trim()) === normalizeText(flavor);
-                return (
-                  <button
-                    key={flavor}
-                    type="button"
-                    onClick={() =>
-                      setSearchQuery((prev) =>
-                        normalizeText(prev.trim()) === normalizeText(flavor) ? "" : flavor
-                      )
-                    }
-                    className={`px-3 py-1 rounded-full text-xs font-semibold transition-all cursor-pointer border ${
-                      isSelected
-                        ? "bg-brand-espresso text-[#FFFDF9] border-brand-espresso shadow-2xs"
-                        : "bg-brand-card hover:bg-brand-bg text-brand-text border-brand-border"
-                    }`}
-                  >
-                    {flavor}
-                  </button>
-                );
-              })}
-              {searchQuery.trim() && (
-                <button
-                  type="button"
-                  onClick={() => setSearchQuery("")}
-                  className="px-2.5 py-1 rounded-full text-xs font-bold text-brand-primary hover:underline cursor-pointer"
-                >
-                  Mostrar todos
-                </button>
-              )}
-            </div>
-
-            {/* Pílulas de Subcategoria */}
-            {!searchQuery.trim() && subcategories.length > 1 && (
-              <div className="flex items-center gap-2 flex-wrap mt-3 pt-3 border-t border-brand-border/70">
-                <span className="text-xs font-bold text-brand-muted mr-1">Filtrar por formato:</span>
-                {subcategories.map((sub) => {
-                  const active = activeSubcategory === sub;
+            {/* Filtros Rápidos por Sabor (Deslizante em 1 linha no celular, wrap no desktop) */}
+            <div className="mt-3 pt-3 border-t border-brand-border/70">
+              <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar sm:flex-wrap pb-0.5">
+                <span className="text-[11px] sm:text-xs font-bold text-brand-muted mr-1 shrink-0">
+                  Sabor:
+                </span>
+                {quickFlavors.map((flavor) => {
+                  const isSelected = normalizeText(searchQuery.trim()) === normalizeText(flavor);
                   return (
                     <button
-                      key={sub}
+                      key={flavor}
                       type="button"
-                      onClick={() => setActiveSubcategory(sub)}
-                      className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
-                        active
-                          ? "bg-brand-primary text-white shadow-2xs"
-                          : "bg-brand-bg text-brand-text hover:bg-brand-bg-alt"
+                      onClick={() =>
+                        setSearchQuery((prev) =>
+                          normalizeText(prev.trim()) === normalizeText(flavor) ? "" : flavor
+                        )
+                      }
+                      className={`px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap shrink-0 transition-all cursor-pointer border ${
+                        isSelected
+                          ? "bg-brand-espresso text-[#FFFDF9] border-brand-espresso shadow-2xs"
+                          : "bg-brand-card hover:bg-brand-bg text-brand-text border-brand-border"
                       }`}
                     >
-                      {sub}
+                      {flavor}
                     </button>
                   );
                 })}
+              </div>
+            </div>
+
+            {/* Pílulas de Subcategoria (Deslizante em 1 linha no celular) */}
+            {!searchQuery.trim() && subcategories.length > 1 && (
+              <div className="mt-2.5 pt-2.5 border-t border-brand-border/70">
+                <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar sm:flex-wrap pb-0.5">
+                  <span className="text-[11px] sm:text-xs font-bold text-brand-muted mr-1 shrink-0">
+                    Tipo:
+                  </span>
+                  {subcategories.map((sub) => {
+                    const active = activeSubcategory === sub;
+                    return (
+                      <button
+                        key={sub}
+                        type="button"
+                        onClick={() => setActiveSubcategory(sub)}
+                        className={`px-3.5 py-1.5 rounded-full text-xs font-bold whitespace-nowrap shrink-0 transition-all cursor-pointer ${
+                          active
+                            ? "bg-brand-primary text-white shadow-2xs"
+                            : "bg-brand-bg text-brand-text hover:bg-brand-bg-alt"
+                        }`}
+                      >
+                        {sub}
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
             )}
           </div>
 
           {/* Listagem dos Itens */}
           {displayedSections.length === 0 ? (
-            <div className="bg-brand-card border border-brand-border rounded-3xl p-12 text-center">
-              <p className="font-serif text-xl font-bold text-brand-heading mb-2">
+            <div className="bg-brand-card border border-brand-border rounded-3xl p-8 sm:p-12 text-center">
+              <p className="font-serif text-lg sm:text-xl font-bold text-brand-heading mb-2">
                 Nenhum item encontrado para &ldquo;{searchQuery}&rdquo;
               </p>
-              <p className="text-sm text-brand-muted mb-5">
+              <p className="text-xs sm:text-sm text-brand-muted mb-5">
                 Tente buscar por outro ingrediente ou limpe o filtro para ver todas as opções.
               </p>
               <button
@@ -1178,33 +1224,27 @@ export default function Home() {
               </button>
             </div>
           ) : (
-            <div className="space-y-12">
+            <div className="space-y-10 sm:space-y-12">
               {displayedSections.map((section) => (
                 <div key={section.category}>
                   {/* Cabeçalho da Categoria Atual */}
-                  <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2 pb-4 mb-6 border-b-2 border-brand-border">
+                  <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2 pb-3.5 mb-5 border-b-2 border-brand-border">
                     <div>
                       <div className="flex items-center gap-2.5 flex-wrap">
                         <h3 className="font-serif text-2xl sm:text-3xl font-bold text-brand-heading">
                           {section.category}
                         </h3>
-                        <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-brand-bg-alt text-brand-heading">
+                        <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-brand-bg-alt text-brand-heading">
                           {section.items.length} {section.items.length === 1 ? "opção" : "opções"}
                         </span>
                       </div>
-                      <p className="text-sm text-brand-muted mt-1">{section.subtitle}</p>
+                      <p className="text-xs sm:text-sm text-brand-muted mt-1">{section.subtitle}</p>
                     </div>
-
-                    {section.unitLabel === "un" && (
-                      <span className="text-xs font-semibold text-brand-muted bg-brand-card px-3 py-1.5 rounded-lg border border-brand-border self-start sm:self-auto shrink-0">
-                        💡 Adicione de +10, +25 ou +50 un
-                      </span>
-                    )}
                   </div>
 
-                  {/* MODO 1: CARTÕES GASTRONÔMICOS (GRID) */}
+                  {/* MODO 1: CARTÕES GASTRONÔMICOS (GRID COM BOTÕES AMPLOS PARA TOQUE) */}
                   {viewMode === "grid" ? (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
                       {section.items.map((item) => {
                         const inCart = cart[item.id];
                         const isZeroPrice = item.price === 0;
@@ -1213,15 +1253,15 @@ export default function Home() {
                         return (
                           <article
                             key={item.id}
-                            className={`group bg-brand-card rounded-2xl p-5 sm:p-6 flex flex-col justify-between border transition-all duration-200 ${
+                            className={`group bg-brand-card rounded-2xl p-4 sm:p-6 flex flex-col justify-between border transition-all duration-200 ${
                               inCart
-                                ? "border-brand-primary ring-2 ring-brand-primary/15 shadow-md"
-                                : "border-brand-border hover:border-brand-primary/45 shadow-2xs hover:shadow-md hover:-translate-y-0.5"
+                                ? "border-brand-primary ring-2 ring-brand-primary/20 shadow-md"
+                                : "border-brand-border hover:border-brand-primary/45 shadow-2xs"
                             }`}
                           >
                             <div>
                               {/* Topo do Cartão: Subcategoria & Badge */}
-                              <div className="flex items-center justify-between gap-2 mb-2">
+                              <div className="flex items-center justify-between gap-2 mb-1.5">
                                 <span className="text-[11px] font-bold uppercase tracking-wider text-brand-muted">
                                   {item.subcategory || section.category}
                                 </span>
@@ -1238,24 +1278,25 @@ export default function Home() {
                               </div>
 
                               {/* Nome do Item */}
-                              <h4 className="font-serif font-bold text-xl text-brand-heading group-hover:text-brand-primary transition-colors leading-snug">
+                              <h4 className="font-serif font-bold text-lg sm:text-xl text-brand-heading group-hover:text-brand-primary transition-colors leading-snug">
                                 {item.name}
                               </h4>
 
                               {/* Descrição */}
                               {item.description && (
-                                <p className="text-sm text-brand-muted mt-2 leading-relaxed">
+                                <p className="text-xs sm:text-sm text-brand-muted mt-1.5 leading-relaxed">
                                   {item.description}
                                 </p>
                               )}
                             </div>
 
-                            {/* Rodapé do Cartão: Preço & Botões de Quantidade (+10, +25, +50) */}
-                            <div className="mt-5 pt-4 border-t border-brand-border/70 flex flex-col gap-3">
-                              <div className="flex items-baseline justify-between gap-2">
+                            {/* Rodapé do Cartão: Preço & Controles Grandes para Celular */}
+                            <div className="mt-4 pt-3.5 border-t border-brand-border/70 flex flex-col gap-3">
+                              {/* Linha de Preço */}
+                              <div className="flex items-baseline justify-between gap-2 flex-wrap">
                                 {isZeroPrice ? (
                                   <div>
-                                    <span className="text-[11px] uppercase tracking-wider font-bold text-brand-muted block">
+                                    <span className="text-[10px] uppercase tracking-wider font-bold text-brand-muted block">
                                       Valor por porção
                                     </span>
                                     <span className="font-serif font-bold text-lg text-brand-primary">
@@ -1263,7 +1304,7 @@ export default function Home() {
                                     </span>
                                   </div>
                                 ) : (
-                                  <div>
+                                  <div className="flex items-baseline justify-between w-full gap-2">
                                     <div className="flex items-baseline gap-1">
                                       <span className="text-xs font-bold text-brand-muted">R$</span>
                                       <span className="font-serif font-bold text-2xl text-brand-heading">
@@ -1274,61 +1315,38 @@ export default function Home() {
                                       </span>
                                     </div>
                                     {isUnitItem && (
-                                      <div className="flex items-center gap-2 text-[11px] font-semibold text-brand-muted mt-0.5">
-                                        <span>
-                                          50 un: <strong className="text-brand-text">R$ {formatBRL(item.price * 50)}</strong>
-                                        </span>
-                                        <span>•</span>
-                                        <span>
-                                          Cento: <strong className="text-brand-text">R$ {formatBRL(item.price * 100)}</strong>
-                                        </span>
-                                      </div>
+                                      <span className="text-[11px] font-semibold text-brand-muted bg-brand-bg px-2.5 py-1 rounded-lg">
+                                        Cento: <strong className="text-brand-heading">R$ {formatBRL(item.price * 100)}</strong>
+                                      </span>
                                     )}
                                   </div>
                                 )}
                               </div>
 
-                              {/* Controles de Adição: Múltiplos de 10, 25 e 50 para Salgados/Doces */}
+                              {/* BOTÕES DE ADIÇÃO (LARGOS E CONFORTÁVEIS PARA TOQUE NO CELULAR) */}
                               {isUnitItem ? (
-                                <div className="flex items-center justify-between gap-2 pt-1">
-                                  {inCart ? (
-                                    <div className="inline-flex items-center bg-brand-espresso text-white rounded-full p-1 shadow-2xs">
-                                      <button
-                                        type="button"
-                                        onClick={() => handleRemoveFromCart(item.id, 10)}
-                                        className="px-2 h-7 rounded-full hover:bg-white/15 flex items-center justify-center font-bold text-xs transition-colors cursor-pointer"
-                                        title="Remover 10 unidades"
-                                      >
-                                        −10
-                                      </button>
-                                      <span className="px-2.5 text-xs font-extrabold text-[#E6B35A]">
-                                        {inCart.quantity} un
+                                inCart ? (
+                                  <div className="bg-brand-bg rounded-xl p-2 border border-brand-primary/30 space-y-2">
+                                    <div className="flex items-center justify-between px-1">
+                                      <span className="text-xs font-extrabold text-brand-primary">
+                                        ✓ Na lista: {inCart.quantity} un (R$ {formatBRL(item.price * inCart.quantity)})
                                       </span>
                                       <button
                                         type="button"
-                                        onClick={() =>
-                                          handleAddToCart(
-                                            item,
-                                            section.category,
-                                            section.unitLabel,
-                                            section.stepQty,
-                                            10
-                                          )
-                                        }
-                                        className="px-2 h-7 rounded-full bg-brand-primary hover:bg-brand-primary-hover flex items-center justify-center font-bold text-xs transition-colors cursor-pointer"
-                                        title="Adicionar mais 10 unidades"
+                                        onClick={() => handleDeleteFromCart(item.id)}
+                                        className="text-[11px] font-bold text-brand-muted hover:text-brand-primary underline cursor-pointer"
                                       >
-                                        +10
+                                        Remover
                                       </button>
                                     </div>
-                                  ) : (
-                                    <span className="text-[11px] font-bold text-brand-muted">
-                                      Incluir:
-                                    </span>
-                                  )}
-
-                                  <div className="flex items-center gap-1.5 ml-auto">
-                                    {!inCart && (
+                                    <div className="grid grid-cols-4 gap-1.5">
+                                      <button
+                                        type="button"
+                                        onClick={() => handleRemoveFromCart(item.id, 10)}
+                                        className="py-2 rounded-lg bg-brand-card hover:bg-brand-bg-alt text-brand-heading font-extrabold text-xs border border-brand-border active:scale-95 transition-all cursor-pointer"
+                                      >
+                                        −10
+                                      </button>
                                       <button
                                         type="button"
                                         onClick={() =>
@@ -1340,57 +1358,78 @@ export default function Home() {
                                             10
                                           )
                                         }
-                                        className="px-2.5 py-1.5 rounded-full bg-brand-bg hover:bg-brand-primary text-brand-heading hover:text-white text-xs font-bold border border-brand-border hover:border-brand-primary transition-all cursor-pointer"
+                                        className="py-2 rounded-lg bg-brand-primary hover:bg-brand-primary-hover text-white font-extrabold text-xs active:scale-95 transition-all cursor-pointer"
                                       >
                                         +10
                                       </button>
-                                    )}
-                                    <button
-                                      type="button"
-                                      onClick={() =>
-                                        handleAddToCart(
-                                          item,
-                                          section.category,
-                                          section.unitLabel,
-                                          section.stepQty,
-                                          25
-                                        )
-                                      }
-                                      className="px-2.5 py-1.5 rounded-full bg-brand-bg hover:bg-brand-primary text-brand-heading hover:text-white text-xs font-bold border border-brand-border hover:border-brand-primary transition-all cursor-pointer"
-                                    >
-                                      +25
-                                    </button>
-                                    <button
-                                      type="button"
-                                      onClick={() =>
-                                        handleAddToCart(
-                                          item,
-                                          section.category,
-                                          section.unitLabel,
-                                          section.stepQty,
-                                          50
-                                        )
-                                      }
-                                      className="px-2.5 py-1.5 rounded-full bg-brand-bg hover:bg-brand-primary text-brand-heading hover:text-white text-xs font-bold border border-brand-border hover:border-brand-primary transition-all cursor-pointer"
-                                    >
-                                      +50
-                                    </button>
+                                      <button
+                                        type="button"
+                                        onClick={() =>
+                                          handleAddToCart(
+                                            item,
+                                            section.category,
+                                            section.unitLabel,
+                                            section.stepQty,
+                                            25
+                                          )
+                                        }
+                                        className="py-2 rounded-lg bg-brand-espresso hover:bg-brand-primary text-white font-extrabold text-xs active:scale-95 transition-all cursor-pointer"
+                                      >
+                                        +25
+                                      </button>
+                                      <button
+                                        type="button"
+                                        onClick={() =>
+                                          handleAddToCart(
+                                            item,
+                                            section.category,
+                                            section.unitLabel,
+                                            section.stepQty,
+                                            50
+                                          )
+                                        }
+                                        className="py-2 rounded-lg bg-brand-espresso hover:bg-brand-primary text-white font-extrabold text-xs active:scale-95 transition-all cursor-pointer"
+                                      >
+                                        +50
+                                      </button>
+                                    </div>
                                   </div>
-                                </div>
+                                ) : (
+                                  <div className="grid grid-cols-3 gap-2">
+                                    {[10, 25, 50].map((qty) => (
+                                      <button
+                                        key={qty}
+                                        type="button"
+                                        onClick={() =>
+                                          handleAddToCart(
+                                            item,
+                                            section.category,
+                                            section.unitLabel,
+                                            section.stepQty,
+                                            qty
+                                          )
+                                        }
+                                        className="py-2.5 rounded-xl bg-brand-bg hover:bg-brand-primary text-brand-heading hover:text-white text-xs font-extrabold border border-brand-border hover:border-brand-primary active:scale-95 transition-all cursor-pointer"
+                                      >
+                                        +{qty} un
+                                      </button>
+                                    ))}
+                                  </div>
+                                )
                               ) : (
                                 /* Controles para Tortas Salgadas e Vinagretes (1 em 1) */
-                                <div className="flex items-center justify-end gap-2 pt-1">
+                                <div className="pt-0.5">
                                   {inCart ? (
-                                    <div className="inline-flex items-center bg-brand-espresso text-white rounded-full p-1 shadow-2xs">
+                                    <div className="flex items-center justify-between bg-brand-bg rounded-xl p-1.5 border border-brand-primary/30">
                                       <button
                                         type="button"
                                         onClick={() => handleRemoveFromCart(item.id, 1)}
-                                        className="w-7 h-7 rounded-full hover:bg-white/15 flex items-center justify-center font-bold text-sm transition-colors cursor-pointer"
+                                        className="w-10 h-9 rounded-lg bg-brand-card border border-brand-border font-extrabold text-base text-brand-heading cursor-pointer"
                                       >
                                         −
                                       </button>
-                                      <span className="px-3 text-xs font-extrabold text-[#E6B35A]">
-                                        {inCart.quantity} {section.unitLabel}
+                                      <span className="text-xs font-extrabold text-brand-primary">
+                                        ✓ {inCart.quantity} {section.unitLabel} na lista
                                       </span>
                                       <button
                                         type="button"
@@ -1403,7 +1442,7 @@ export default function Home() {
                                             1
                                           )
                                         }
-                                        className="w-7 h-7 rounded-full bg-brand-primary hover:bg-brand-primary-hover flex items-center justify-center font-bold text-sm transition-colors cursor-pointer"
+                                        className="w-10 h-9 rounded-lg bg-brand-primary text-white font-extrabold text-base cursor-pointer"
                                       >
                                         +
                                       </button>
@@ -1420,9 +1459,9 @@ export default function Home() {
                                           1
                                         )
                                       }
-                                      className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-brand-bg hover:bg-brand-primary text-brand-heading hover:text-white text-xs font-bold border border-brand-border hover:border-brand-primary transition-all cursor-pointer"
+                                      className="w-full py-2.5 px-4 rounded-xl bg-brand-bg hover:bg-brand-primary text-brand-heading hover:text-white text-xs font-extrabold border border-brand-border hover:border-brand-primary active:scale-95 transition-all cursor-pointer"
                                     >
-                                      <span>+ Incluir no orçamento</span>
+                                      + Adicionar à lista de orçamento
                                     </button>
                                   )}
                                 </div>
@@ -1433,9 +1472,9 @@ export default function Home() {
                       })}
                     </div>
                   ) : (
-                    /* MODO 2: LISTA CLÁSSICA DE BISTRÔ (LINHAS PONTILHADAS) */
-                    <div className="bg-brand-card border border-brand-border rounded-3xl p-5 sm:p-8 shadow-xs">
-                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-10 gap-y-6">
+                    /* MODO 2: LISTA COMPACTA (FÁCIL DE ESCANEAR E CLICAR NO CELULAR) */
+                    <div className="bg-brand-card border border-brand-border rounded-2xl sm:rounded-3xl p-4 sm:p-8 shadow-xs">
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-10 gap-y-5">
                         {section.items.map((item) => {
                           const inCart = cart[item.id];
                           const isZeroPrice = item.price === 0;
@@ -1444,41 +1483,25 @@ export default function Home() {
                           return (
                             <div
                               key={item.id}
-                              className="group flex flex-col justify-between pb-4 border-b border-brand-border/60 last:border-b-0"
+                              className="flex flex-col justify-between pb-4 border-b border-brand-border/60 last:border-b-0"
                             >
                               <div className="flex items-baseline justify-between gap-2">
-                                <div className="flex items-center gap-2 min-w-0 flex-wrap">
-                                  <h4 className="font-serif font-bold text-lg text-brand-heading group-hover:text-brand-primary transition-colors">
-                                    {item.name}
-                                  </h4>
-                                  {item.badge && (
-                                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-brand-bg-alt text-brand-heading shrink-0">
-                                      {item.badge}
-                                    </span>
-                                  )}
-                                </div>
-
+                                <h4 className="font-serif font-bold text-base sm:text-lg text-brand-heading">
+                                  {item.name}
+                                </h4>
                                 <div className="flex-1 menu-dotted-leader mx-2 hidden sm:block" />
-
-                                <div className="flex items-center gap-2 shrink-0">
+                                <span className="font-serif font-bold text-base sm:text-lg text-brand-primary shrink-0">
                                   {isZeroPrice ? (
-                                    <a
-                                      href={getItemWhatsAppLink(item, section.category)}
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                      className="text-xs font-bold text-brand-primary hover:underline"
-                                    >
-                                      Sob consulta
-                                    </a>
+                                    "Sob consulta"
                                   ) : (
-                                    <span className="font-serif font-bold text-lg text-brand-heading">
+                                    <>
                                       R$ {formatBRL(item.price)}
-                                      <span className="text-xs font-sans font-normal text-brand-muted ml-1">
+                                      <span className="text-[11px] font-sans font-normal text-brand-muted ml-0.5">
                                         /{section.unitLabel}
                                       </span>
-                                    </span>
+                                    </>
                                   )}
-                                </div>
+                                </span>
                               </div>
 
                               {item.description && (
@@ -1487,42 +1510,29 @@ export default function Home() {
                                 </p>
                               )}
 
-                              <div className="flex items-center justify-end gap-1.5 mt-2.5">
-                                {inCart && (
-                                  <div className="inline-flex items-center bg-brand-espresso text-white rounded-full px-2 py-0.5 text-xs font-bold">
+                              <div className="flex items-center justify-between gap-2 mt-2.5">
+                                {inCart ? (
+                                  <span className="text-xs font-extrabold text-brand-primary">
+                                    ✓ {inCart.quantity} {isUnitItem ? "un" : "x"} na lista
+                                  </span>
+                                ) : (
+                                  <span className="text-[11px] text-brand-muted">Adicionar:</span>
+                                )}
+
+                                <div className="flex items-center gap-1.5">
+                                  {inCart && (
                                     <button
                                       type="button"
                                       onClick={() =>
                                         handleRemoveFromCart(item.id, isUnitItem ? 10 : 1)
                                       }
-                                      className="px-1.5 hover:text-[#E6B35A] cursor-pointer"
+                                      className="px-2.5 py-1 rounded-lg bg-brand-bg-alt text-brand-heading text-xs font-extrabold cursor-pointer"
                                     >
-                                      −{isUnitItem ? "10" : ""}
+                                      −{isUnitItem ? "10" : "1"}
                                     </button>
-                                    <span className="px-1.5 text-[#E6B35A]">
-                                      {inCart.quantity}
-                                    </span>
-                                    <button
-                                      type="button"
-                                      onClick={() =>
-                                        handleAddToCart(
-                                          item,
-                                          section.category,
-                                          section.unitLabel,
-                                          section.stepQty,
-                                          isUnitItem ? 10 : 1
-                                        )
-                                      }
-                                      className="px-1.5 hover:text-[#E6B35A] cursor-pointer"
-                                    >
-                                      +{isUnitItem ? "10" : ""}
-                                    </button>
-                                  </div>
-                                )}
-
-                                {isUnitItem ? (
-                                  <>
-                                    {!inCart && (
+                                  )}
+                                  {isUnitItem ? (
+                                    <>
                                       <button
                                         type="button"
                                         onClick={() =>
@@ -1534,44 +1544,42 @@ export default function Home() {
                                             10
                                           )
                                         }
-                                        className="px-2 py-0.5 rounded-full bg-brand-bg hover:bg-brand-primary text-brand-heading hover:text-white text-[11px] font-bold border border-brand-border cursor-pointer"
+                                        className="px-2.5 py-1 rounded-lg bg-brand-bg hover:bg-brand-primary text-brand-heading hover:text-white text-xs font-bold border border-brand-border cursor-pointer"
                                       >
                                         +10
                                       </button>
-                                    )}
-                                    <button
-                                      type="button"
-                                      onClick={() =>
-                                        handleAddToCart(
-                                          item,
-                                          section.category,
-                                          section.unitLabel,
-                                          section.stepQty,
-                                          25
-                                        )
-                                      }
-                                      className="px-2 py-0.5 rounded-full bg-brand-bg hover:bg-brand-primary text-brand-heading hover:text-white text-[11px] font-bold border border-brand-border cursor-pointer"
-                                    >
-                                      +25
-                                    </button>
-                                    <button
-                                      type="button"
-                                      onClick={() =>
-                                        handleAddToCart(
-                                          item,
-                                          section.category,
-                                          section.unitLabel,
-                                          section.stepQty,
-                                          50
-                                        )
-                                      }
-                                      className="px-2 py-0.5 rounded-full bg-brand-bg hover:bg-brand-primary text-brand-heading hover:text-white text-[11px] font-bold border border-brand-border cursor-pointer"
-                                    >
-                                      +50
-                                    </button>
-                                  </>
-                                ) : (
-                                  !inCart && (
+                                      <button
+                                        type="button"
+                                        onClick={() =>
+                                          handleAddToCart(
+                                            item,
+                                            section.category,
+                                            section.unitLabel,
+                                            section.stepQty,
+                                            25
+                                          )
+                                        }
+                                        className="px-2.5 py-1 rounded-lg bg-brand-bg hover:bg-brand-primary text-brand-heading hover:text-white text-xs font-bold border border-brand-border cursor-pointer"
+                                      >
+                                        +25
+                                      </button>
+                                      <button
+                                        type="button"
+                                        onClick={() =>
+                                          handleAddToCart(
+                                            item,
+                                            section.category,
+                                            section.unitLabel,
+                                            section.stepQty,
+                                            50
+                                          )
+                                        }
+                                        className="px-2.5 py-1 rounded-lg bg-brand-bg hover:bg-brand-primary text-brand-heading hover:text-white text-xs font-bold border border-brand-border cursor-pointer"
+                                      >
+                                        +50
+                                      </button>
+                                    </>
+                                  ) : (
                                     <button
                                       type="button"
                                       onClick={() =>
@@ -1583,12 +1591,12 @@ export default function Home() {
                                           1
                                         )
                                       }
-                                      className="px-2.5 py-0.5 rounded-full bg-brand-bg hover:bg-brand-primary text-brand-heading hover:text-white text-[11px] font-bold border border-brand-border cursor-pointer"
+                                      className="px-3 py-1 rounded-lg bg-brand-bg hover:bg-brand-primary text-brand-heading hover:text-white text-xs font-bold border border-brand-border cursor-pointer"
                                     >
-                                      + Incluir
+                                      +1
                                     </button>
-                                  )
-                                )}
+                                  )}
+                                </div>
                               </div>
                             </div>
                           );
@@ -1602,35 +1610,35 @@ export default function Home() {
           )}
         </section>
 
-        {/* 3. SEÇÃO CONSULTIVA: TORTAS DOCES SOB ENCOMENDA (SEM SABORES PRÉ-FIXADOS) */}
-        <section id="tortas-doces" className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
-          <div className="bg-brand-card border-2 border-brand-gold/40 rounded-[2rem] p-6 sm:p-10 lg:p-12 shadow-md relative overflow-hidden">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        {/* 3. SEÇÃO CONSULTIVA: TORTAS DOCES SOB ENCOMENDA */}
+        <section id="tortas-doces" className="max-w-6xl mx-auto px-3.5 sm:px-6 lg:px-8 pb-12 sm:pb-16">
+          <div className="bg-brand-card border-2 border-brand-gold/40 rounded-3xl sm:rounded-[2rem] p-5 sm:p-10 lg:p-12 shadow-md relative overflow-hidden">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center">
               <div className="lg:col-span-7">
-                <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-brand-gold/15 text-brand-gold text-xs font-bold uppercase tracking-widest mb-3">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-gold/15 text-brand-gold text-[11px] sm:text-xs font-bold uppercase tracking-widest mb-3">
                   <span>🎂</span> Também Fazemos • Sob Consulta
                 </div>
-                <h2 className="font-serif text-3xl sm:text-4xl font-bold text-brand-heading leading-tight mb-4">
+                <h2 className="font-serif text-2xl sm:text-4xl font-bold text-brand-heading leading-tight mb-3 sm:mb-4">
                   Tortas Doces Artesanais para o seu Evento
                 </h2>
-                <p className="text-sm sm:text-base text-brand-muted leading-relaxed mb-5">
+                <p className="text-xs sm:text-base text-brand-muted leading-relaxed mb-3 sm:mb-4">
                   Além dos salgados, docinhos e tortas salgadas do cardápio, você também pode encomendar{" "}
                   <strong className="text-brand-heading">tortas doces feitas sob medida</strong> para a sua comemoração.
                 </p>
-                <p className="text-sm sm:text-base text-brand-muted leading-relaxed mb-7">
+                <p className="text-xs sm:text-base text-brand-muted leading-relaxed mb-5 sm:mb-7">
                   Trabalhamos tanto com tortas confeitadas em{" "}
                   <strong className="text-brand-heading">chantilly / chantininho</strong> quanto com tortas inteiras tradicionais (como de{" "}
                   <strong className="text-brand-heading">brigadeiro, chocolate ou doce de leite</strong>), com diversas opções de recheios — como brigadeiro preto e branco, doce de leite e outras combinações definidas diretamente com a Tânia mediante consulta.
                 </p>
 
-                <div className="flex flex-wrap items-center gap-3">
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3">
                   <a
                     href={getSweetCakeWhatsAppLink()}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2.5 px-6 py-3.5 rounded-full bg-brand-primary hover:bg-brand-primary-hover text-white font-bold text-sm shadow-sm transition-all"
+                    className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl sm:rounded-full bg-brand-primary hover:bg-brand-primary-hover text-white font-bold text-xs sm:text-sm shadow-sm transition-all text-center"
                   >
-                    <span>Consultar Opções de Tortas Doces no WhatsApp</span>
+                    <span>Consultar Tortas Doces no WhatsApp</span>
                     <span>→</span>
                   </a>
 
@@ -1645,11 +1653,11 @@ export default function Home() {
                         1
                       )
                     }
-                    className="inline-flex items-center gap-2 px-5 py-3.5 rounded-full bg-brand-bg hover:bg-brand-bg-alt text-brand-heading font-bold text-sm border border-brand-border transition-all cursor-pointer"
+                    className="inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-2xl sm:rounded-full bg-brand-bg hover:bg-brand-bg-alt text-brand-heading font-bold text-xs sm:text-sm border border-brand-border transition-all cursor-pointer"
                   >
                     <span>
                       {cart[customSweetCakeItem.id]
-                        ? `✓ Adicionada na lista (${cart[customSweetCakeItem.id].quantity}x)`
+                        ? `✓ Na lista (${cart[customSweetCakeItem.id].quantity}x)`
                         : "+ Incluir interesse na Minha Lista"}
                     </span>
                   </button>
@@ -1657,41 +1665,34 @@ export default function Home() {
               </div>
 
               {/* Destaques Ilustrativos das Possibilidades */}
-              <div className="lg:col-span-5 bg-brand-surface-subtle rounded-3xl p-6 sm:p-7 border border-brand-border space-y-5">
-                <div className="flex items-center gap-3.5">
-                  <div className="w-12 h-12 rounded-2xl bg-brand-primary/15 text-brand-primary flex items-center justify-center shrink-0">
-                    <CategoryIcon category="Tortas Doces" className="w-6 h-6" />
+              <div className="lg:col-span-5 bg-brand-surface-subtle rounded-2xl sm:rounded-3xl p-4 sm:p-7 border border-brand-border space-y-3 sm:space-y-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-brand-primary/15 text-brand-primary flex items-center justify-center shrink-0">
+                    <CategoryIcon category="Tortas Doces" className="w-5 h-5 sm:w-6 sm:h-6" />
                   </div>
                   <div>
-                    <span className="text-xs font-bold uppercase tracking-wider text-brand-primary block">
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-brand-primary block">
                       Feita do seu jeito
                     </span>
-                    <h3 className="font-serif font-bold text-xl text-brand-heading">
+                    <h3 className="font-serif font-bold text-lg sm:text-xl text-brand-heading">
                       Como personalizar a sua
                     </h3>
                   </div>
                 </div>
 
-                <div className="space-y-3 text-xs sm:text-sm text-brand-muted">
-                  <div className="p-3.5 rounded-2xl bg-brand-card border border-brand-border">
+                <div className="space-y-2.5 text-xs sm:text-sm text-brand-muted">
+                  <div className="p-3 rounded-xl bg-brand-card border border-brand-border">
                     <strong className="text-brand-heading block mb-0.5">
                       ✦ Estilo & Cobertura
                     </strong>
-                    Acabamento delicado em chantilly/chantininho ou tortas inteiramente de brigadeiro, doce de leite ou chocolate.
+                    Acabamento em chantilly/chantininho ou tortas inteiramente de brigadeiro, doce de leite ou chocolate.
                   </div>
 
-                  <div className="p-3.5 rounded-2xl bg-brand-card border border-brand-border">
+                  <div className="p-3 rounded-xl bg-brand-card border border-brand-border">
                     <strong className="text-brand-heading block mb-0.5">
                       ✦ Recheios Variados
                     </strong>
-                    Diversas possibilidades como brigadeiro preto, brigadeiro branco, doce de leite e outros sabores sob consulta.
-                  </div>
-
-                  <div className="p-3.5 rounded-2xl bg-brand-card border border-brand-border">
-                    <strong className="text-brand-heading block mb-0.5">
-                      ✦ Orçamento Personalizado
-                    </strong>
-                    Converse com a Tânia pelo WhatsApp para escolher a combinação ideal para o seu evento.
+                    Brigadeiro preto, brigadeiro branco, doce de leite e outros sabores sob consulta.
                   </div>
                 </div>
               </div>
@@ -1700,22 +1701,22 @@ export default function Home() {
         </section>
 
         {/* 4. SEÇÃO SOBRE: TRADIÇÃO E CAPRICHO */}
-        <section id="tradicao" className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
-          <div className="bg-brand-espresso text-[#F5EFE6] rounded-[2rem] p-8 sm:p-12 lg:p-16 shadow-lg relative overflow-hidden">
+        <section id="tradicao" className="max-w-6xl mx-auto px-3.5 sm:px-6 lg:px-8 pb-12 sm:pb-16">
+          <div className="bg-brand-espresso text-[#F5EFE6] rounded-3xl sm:rounded-[2rem] p-6 sm:p-12 lg:p-16 shadow-lg relative overflow-hidden">
             <div className="max-w-3xl mx-auto text-center relative z-10">
-              <span className="inline-block text-xs font-bold uppercase tracking-[0.22em] text-[#E6B35A] mb-3">
+              <span className="inline-block text-xs font-bold uppercase tracking-[0.22em] text-[#E6B35A] mb-2.5">
                 Nossa Essência
               </span>
-              <h2 className="font-serif text-3xl sm:text-4xl font-bold text-white mb-6">
+              <h2 className="font-serif text-2xl sm:text-4xl font-bold text-white mb-4 sm:mb-6">
                 Tradição e Capricho
               </h2>
-              <p className="text-base sm:text-lg text-[#F5EFE6]/90 leading-relaxed">
+              <p className="text-sm sm:text-lg text-[#F5EFE6]/90 leading-relaxed">
                 Nossa produção é feita sob medida para o seu evento. Trabalhamos exclusivamente com encomendas agendadas para garantir que cada salgado, doce e torta saia da nossa cozinha fresquinho, direto para a sua comemoração. Acreditamos que o segredo de um bom buffet está no cuidado com os detalhes: tudo é preparado à mão, utilizando ingredientes selecionados e muito afeto. O resultado é aquele sabor inconfundível, pronto para surpreender os seus convidados.
               </p>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-10 pt-8 border-t border-white/15 text-left">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mt-8 pt-6 border-t border-white/15 text-left">
                 <div className="bg-white/5 rounded-2xl p-4 border border-white/10">
-                  <span className="text-[#E6B35A] font-serif font-bold text-lg block">
+                  <span className="text-[#E6B35A] font-serif font-bold text-base sm:text-lg block">
                     Ingredientes Selecionados
                   </span>
                   <p className="text-xs text-[#F5EFE6]/80 mt-1 leading-relaxed">
@@ -1723,7 +1724,7 @@ export default function Home() {
                   </p>
                 </div>
                 <div className="bg-white/5 rounded-2xl p-4 border border-white/10">
-                  <span className="text-[#E6B35A] font-serif font-bold text-lg block">
+                  <span className="text-[#E6B35A] font-serif font-bold text-base sm:text-lg block">
                     Sempre Fresquinho
                   </span>
                   <p className="text-xs text-[#F5EFE6]/80 mt-1 leading-relaxed">
@@ -1731,7 +1732,7 @@ export default function Home() {
                   </p>
                 </div>
                 <div className="bg-white/5 rounded-2xl p-4 border border-white/10">
-                  <span className="text-[#E6B35A] font-serif font-bold text-lg block">
+                  <span className="text-[#E6B35A] font-serif font-bold text-base sm:text-lg block">
                     Cardápio Completo
                   </span>
                   <p className="text-xs text-[#F5EFE6]/80 mt-1 leading-relaxed">
@@ -1744,51 +1745,51 @@ export default function Home() {
         </section>
 
         {/* 5. COMO ENCOMENDAR */}
-        <section id="como-encomendar" className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
-          <div className="bg-brand-card border border-brand-border rounded-[2rem] p-6 sm:p-10">
-            <div className="text-center max-w-xl mx-auto mb-8">
-              <span className="text-xs font-bold uppercase tracking-[0.2em] text-brand-primary block mb-1.5">
+        <section id="como-encomendar" className="max-w-6xl mx-auto px-3.5 sm:px-6 lg:px-8 pb-10">
+          <div className="bg-brand-card border border-brand-border rounded-3xl sm:rounded-[2rem] p-5 sm:p-10">
+            <div className="text-center max-w-xl mx-auto mb-6 sm:mb-8">
+              <span className="text-xs font-bold uppercase tracking-[0.2em] text-brand-primary block mb-1">
                 Passo a Passo
               </span>
-              <h2 className="font-serif text-2xl sm:text-3xl font-bold text-brand-heading">
+              <h2 className="font-serif text-xl sm:text-3xl font-bold text-brand-heading">
                 Como funciona sua encomenda
               </h2>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="bg-brand-bg/60 rounded-2xl p-6 border border-brand-border/80">
-                <span className="w-9 h-9 rounded-full bg-brand-primary text-white font-serif font-bold flex items-center justify-center mb-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+              <div className="bg-brand-bg/60 rounded-2xl p-5 border border-brand-border/80">
+                <span className="w-8 h-8 rounded-full bg-brand-primary text-white font-serif font-bold flex items-center justify-center mb-3 text-sm">
                   1
                 </span>
-                <h3 className="font-serif font-bold text-lg text-brand-heading mb-1.5">
+                <h3 className="font-serif font-bold text-base sm:text-lg text-brand-heading mb-1">
                   Escolha seus favoritos
                 </h3>
-                <p className="text-sm text-brand-muted leading-relaxed">
-                  Navegue pelo cardápio e adicione seus itens de <strong>+10, +25 ou +50 unidades</strong> para montar sua pré-lista de orçamento sem números quebrados.
+                <p className="text-xs sm:text-sm text-brand-muted leading-relaxed">
+                  Toque nos botões <strong>+10, +25 ou +50</strong> nos produtos desejados para montar sua pré-lista de orçamento.
                 </p>
               </div>
 
-              <div className="bg-brand-bg/60 rounded-2xl p-6 border border-brand-border/80">
-                <span className="w-9 h-9 rounded-full bg-brand-primary text-white font-serif font-bold flex items-center justify-center mb-4">
+              <div className="bg-brand-bg/60 rounded-2xl p-5 border border-brand-border/80">
+                <span className="w-8 h-8 rounded-full bg-brand-primary text-white font-serif font-bold flex items-center justify-center mb-3 text-sm">
                   2
                 </span>
-                <h3 className="font-serif font-bold text-lg text-brand-heading mb-1.5">
+                <h3 className="font-serif font-bold text-base sm:text-lg text-brand-heading mb-1">
                   Confirme pelo WhatsApp
                 </h3>
-                <p className="text-sm text-brand-muted leading-relaxed">
-                  Envie sua lista pelo WhatsApp para conferirmos a disponibilidade da data, quantidades mínimas e opções de sabores sob consulta.
+                <p className="text-xs sm:text-sm text-brand-muted leading-relaxed">
+                  Envie sua lista pelo WhatsApp para conferirmos disponibilidade da data, quantidades mínimas e sabores sob consulta.
                 </p>
               </div>
 
-              <div className="bg-brand-bg/60 rounded-2xl p-6 border border-brand-border/80">
-                <span className="w-9 h-9 rounded-full bg-brand-primary text-white font-serif font-bold flex items-center justify-center mb-4">
+              <div className="bg-brand-bg/60 rounded-2xl p-5 border border-brand-border/80">
+                <span className="w-8 h-8 rounded-full bg-brand-primary text-white font-serif font-bold flex items-center justify-center mb-3 text-sm">
                   3
                 </span>
-                <h3 className="font-serif font-bold text-lg text-brand-heading mb-1.5">
+                <h3 className="font-serif font-bold text-base sm:text-lg text-brand-heading mb-1">
                   Celebre com sabor
                 </h3>
-                <p className="text-sm text-brand-muted leading-relaxed">
-                  Preparamos tudo artesanalmente e na hora certa para que sua comemoração tenha aquele sabor inesquecível de receita de família.
+                <p className="text-xs sm:text-sm text-brand-muted leading-relaxed">
+                  Preparamos tudo artesanalmente e na hora certa para que sua comemoração tenha aquele sabor inesquecível.
                 </p>
               </div>
             </div>
@@ -1797,7 +1798,7 @@ export default function Home() {
       </main>
 
       {/* Rodapé */}
-      <footer className="border-t border-brand-border bg-brand-bg-alt/60 py-10 px-4 sm:px-6 lg:px-8 text-center text-xs sm:text-sm text-brand-muted relative z-10">
+      <footer className="border-t border-brand-border bg-brand-bg-alt/60 py-8 px-4 sm:px-6 lg:px-8 text-center text-xs sm:text-sm text-brand-muted relative z-10 pb-24 sm:pb-10">
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="text-center sm:text-left">
             <p className="font-serif font-bold text-base text-brand-heading">Buffet da Tânia</p>
@@ -1820,16 +1821,16 @@ export default function Home() {
         </div>
       </footer>
 
-      {/* MODAL / DRAWER LATERAL DA LISTA DE ORÇAMENTO */}
+      {/* MODAL / DRAWER DA LISTA DE ORÇAMENTO */}
       {isCartOpen && (
-        <div className="fixed inset-0 z-50 flex justify-end bg-black/50 backdrop-blur-xs animate-in fade-in duration-200">
-          <div className="bg-brand-card w-full max-w-md h-full flex flex-col shadow-2xl border-l border-brand-border">
-            <div className="p-5 sm:p-6 border-b border-brand-border flex items-center justify-between bg-brand-bg">
+        <div className="fixed inset-0 z-50 flex items-end sm:items-stretch justify-end bg-black/55 backdrop-blur-xs animate-in fade-in duration-200">
+          <div className="bg-brand-card w-full sm:max-w-md h-[88vh] sm:h-full rounded-t-3xl sm:rounded-none flex flex-col shadow-2xl border-t sm:border-t-0 sm:border-l border-brand-border">
+            <div className="p-4 sm:p-6 border-b border-brand-border flex items-center justify-between bg-brand-bg rounded-t-3xl sm:rounded-none">
               <div>
-                <span className="text-[11px] font-bold uppercase tracking-widest text-brand-primary block">
+                <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-brand-primary block">
                   Simulador de Pedido
                 </span>
-                <h3 className="font-serif text-2xl font-bold text-brand-heading">
+                <h3 className="font-serif text-xl sm:text-2xl font-bold text-brand-heading">
                   Minha Lista de Orçamento
                 </h3>
               </div>
@@ -1843,7 +1844,7 @@ export default function Home() {
               </button>
             </div>
 
-            <div className="flex-1 overflow-y-auto p-5 sm:p-6 space-y-4">
+            <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-3.5">
               {cartEntries.length === 0 ? (
                 <div className="text-center py-12">
                   <div className="w-14 h-14 rounded-full bg-brand-bg text-brand-muted flex items-center justify-center mx-auto mb-3">
@@ -1853,7 +1854,7 @@ export default function Home() {
                     Sua lista ainda está vazia
                   </p>
                   <p className="text-xs sm:text-sm text-brand-muted mt-1 max-w-xs mx-auto leading-relaxed">
-                    Adicione salgados e doces usando os botões <strong>+10, +25 ou +50</strong> (ou tortas e vinagretes) para enviar tudo de uma vez pelo WhatsApp.
+                    Toque nos botões <strong>+10, +25 ou +50</strong> nos itens do cardápio para montar seu pedido e enviar tudo pelo WhatsApp.
                   </p>
                 </div>
               ) : (
@@ -1865,11 +1866,10 @@ export default function Home() {
                       onClick={clearCart}
                       className="text-brand-primary font-bold hover:underline cursor-pointer"
                     >
-                      Limpar lista
+                      Limpar toda a lista
                     </button>
                   </div>
 
-                  {/* Aviso geral sobre quantidades mínimas dentro da lista */}
                   <div className="p-3 rounded-xl bg-brand-bg border border-brand-border text-[11px] text-brand-muted leading-relaxed">
                     💡 <strong>Nota:</strong> Alguns itens possuem quantidade mínima por sabor, que será confirmada com a Tânia pelo WhatsApp.
                   </div>
@@ -1897,20 +1897,28 @@ export default function Home() {
                                 : "Valor e sabores sob consulta"}
                             </span>
                           </div>
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteFromCart(entry.item.id)}
+                            className="text-xs text-brand-muted hover:text-brand-primary px-1.5 py-0.5 cursor-pointer"
+                            title="Remover item"
+                          >
+                            ✕
+                          </button>
                         </div>
 
-                        <div className="flex items-center justify-between gap-2 pt-1 border-t border-brand-border/60">
-                          <div className="inline-flex items-center bg-brand-card border border-brand-border rounded-full p-0.5">
+                        <div className="flex items-center justify-between gap-2 pt-2 border-t border-brand-border/60">
+                          <div className="inline-flex items-center bg-brand-card border border-brand-border rounded-xl p-1">
                             <button
                               type="button"
                               onClick={() =>
                                 handleRemoveFromCart(entry.item.id, isUnit ? 10 : 1)
                               }
-                              className="px-2 h-6 rounded-full hover:bg-brand-bg-alt font-bold text-xs cursor-pointer"
+                              className="px-2.5 py-1 rounded-lg hover:bg-brand-bg-alt font-extrabold text-xs cursor-pointer"
                             >
                               −{isUnit ? "10" : "1"}
                             </button>
-                            <span className="px-2.5 text-xs font-extrabold text-brand-heading">
+                            <span className="px-3 text-xs font-extrabold text-brand-heading">
                               {entry.quantity} {isUnit ? "un" : "x"}
                             </span>
                             <button
@@ -1924,14 +1932,14 @@ export default function Home() {
                                   isUnit ? 10 : 1
                                 )
                               }
-                              className="px-2 h-6 rounded-full bg-brand-primary text-white font-bold text-xs cursor-pointer"
+                              className="px-2.5 py-1 rounded-lg bg-brand-primary text-white font-extrabold text-xs cursor-pointer"
                             >
                               +{isUnit ? "10" : "1"}
                             </button>
                           </div>
 
                           {isUnit && (
-                            <div className="flex items-center gap-1">
+                            <div className="flex items-center gap-1.5">
                               <button
                                 type="button"
                                 onClick={() =>
@@ -1943,7 +1951,7 @@ export default function Home() {
                                     25
                                   )
                                 }
-                                className="px-2 py-1 rounded-full bg-brand-card hover:bg-brand-primary text-brand-heading hover:text-white text-[11px] font-bold border border-brand-border cursor-pointer"
+                                className="px-2.5 py-1.5 rounded-lg bg-brand-card hover:bg-brand-primary text-brand-heading hover:text-white text-xs font-bold border border-brand-border cursor-pointer"
                               >
                                 +25
                               </button>
@@ -1958,7 +1966,7 @@ export default function Home() {
                                     50
                                   )
                                 }
-                                className="px-2 py-1 rounded-full bg-brand-card hover:bg-brand-primary text-brand-heading hover:text-white text-[11px] font-bold border border-brand-border cursor-pointer"
+                                className="px-2.5 py-1.5 rounded-lg bg-brand-card hover:bg-brand-primary text-brand-heading hover:text-white text-xs font-bold border border-brand-border cursor-pointer"
                               >
                                 +50
                               </button>
@@ -1972,9 +1980,9 @@ export default function Home() {
               )}
             </div>
 
-            <div className="p-5 sm:p-6 border-t border-brand-border bg-brand-bg">
+            <div className="p-4 sm:p-6 border-t border-brand-border bg-brand-bg">
               {cartEntries.length > 0 && (
-                <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center justify-between mb-3.5">
                   <span className="text-xs font-bold uppercase tracking-wider text-brand-muted">
                     Total estimado:
                   </span>
@@ -1988,7 +1996,7 @@ export default function Home() {
                 href={getCartWhatsAppLink()}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full py-3.5 px-5 rounded-full bg-[#25D366] hover:bg-[#1FB855] text-white font-bold text-sm flex items-center justify-center gap-2.5 shadow-md transition-all"
+                className="w-full py-3.5 px-5 rounded-2xl sm:rounded-full bg-[#25D366] hover:bg-[#1FB855] text-white font-bold text-sm flex items-center justify-center gap-2.5 shadow-md transition-all"
               >
                 <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
                   <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
@@ -2004,39 +2012,51 @@ export default function Home() {
         </div>
       )}
 
-      {/* 6. BARRA / BOTÃO FLUTUANTE INFERIOR */}
-      <div className="fixed bottom-5 right-5 z-40 flex items-center gap-3">
-        {cartEntries.length > 0 && (
+      {/* 6. BARRA INFERIOR FIXA (ESTILO APP DE DELIVERY NO CELULAR) */}
+      {cartEntries.length > 0 ? (
+        <div className="fixed bottom-3 left-3 right-3 sm:left-auto sm:right-6 sm:bottom-6 z-40 flex items-center justify-between gap-2 bg-brand-espresso text-[#FFFDF9] p-2 sm:p-2.5 rounded-2xl sm:rounded-full shadow-2xl border border-white/15">
           <button
             type="button"
             onClick={() => setIsCartOpen(true)}
-            className="bg-brand-espresso text-[#FFFDF9] py-3 px-5 rounded-full shadow-xl border border-white/15 hover:scale-105 transition-all flex items-center gap-3 cursor-pointer"
+            className="flex items-center gap-2.5 pl-2 pr-3 py-1.5 text-left cursor-pointer"
           >
-            <span className="w-6 h-6 rounded-full bg-brand-primary text-white text-xs font-extrabold flex items-center justify-center">
+            <span className="w-7 h-7 rounded-full bg-brand-primary text-white text-xs font-extrabold flex items-center justify-center shrink-0">
               {cartEntries.length}
             </span>
-            <div className="text-left leading-tight">
-              <span className="text-[11px] text-[#E6B35A] font-bold block">Ver minha lista</span>
-              <span className="text-xs font-extrabold">R$ {formatBRL(cartTotalValue)}</span>
+            <div className="leading-tight">
+              <span className="text-[11px] text-[#E6B35A] font-bold block">
+                Ver minha lista (editar)
+              </span>
+              <span className="text-sm font-extrabold">R$ {formatBRL(cartTotalValue)}</span>
             </div>
           </button>
-        )}
 
+          <a
+            href={getCartWhatsAppLink()}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-[#25D366] hover:bg-[#1FB855] text-white py-2.5 px-4 sm:px-5 rounded-xl sm:rounded-full font-bold text-xs sm:text-sm flex items-center gap-2 shadow-md transition-all shrink-0"
+          >
+            <span>Enviar Pedido</span>
+            <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 sm:w-5 sm:h-5">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
+            </svg>
+          </a>
+        </div>
+      ) : (
         <a
-          href={getCartWhatsAppLink()}
+          href={getGeneralWhatsAppLink()}
           target="_blank"
           rel="noopener noreferrer"
-          className="bg-[#25D366] hover:bg-[#1FB855] text-white py-3.5 px-5 rounded-full shadow-lg hover:scale-105 hover:shadow-xl transition-all flex items-center gap-2.5"
+          className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-40 bg-[#25D366] hover:bg-[#1FB855] text-white py-3 px-4 sm:py-3.5 sm:px-5 rounded-full shadow-lg hover:scale-105 hover:shadow-xl transition-all flex items-center gap-2"
           aria-label="Faça sua encomenda pelo WhatsApp"
         >
-          <span className="font-bold text-sm hidden sm:block">
-            {cartEntries.length > 0 ? "Enviar Encomenda" : "Faça sua encomenda"}
-          </span>
-          <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
+          <span className="font-bold text-xs sm:text-sm">Faça sua encomenda</span>
+          <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 sm:w-6 sm:h-6">
             <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
           </svg>
         </a>
-      </div>
+      )}
     </div>
   );
 }
