@@ -4,14 +4,9 @@ import { useState, useMemo, useEffect } from "react";
 import { menuData, MenuItem } from "./data/menu";
 import { CategoryIcon } from "./components/CategoryIcon";
 import { MarginIllustrations } from "./components/MarginIllustrations";
-
-type CartItem = {
-  item: MenuItem;
-  category: string;
-  unitLabel: string;
-  stepQty: number;
-  quantity: number;
-};
+import { PartyCalculator } from "./components/PartyCalculator";
+import { CartDrawer } from "./components/CartDrawer";
+import { downloadFullMenuPdf, downloadQuotePdf, PdfCartEntry } from "./utils/pdfGenerator";
 
 const badgeStyles: Record<string, string> = {
   "Mais Pedido": "bg-brand-primary/15 text-brand-primary border-brand-primary/30",
@@ -41,7 +36,7 @@ export default function Home() {
   const [viewMode, setViewMode] = useState<"grid" | "bistro">("grid");
   const [guestCount, setGuestCount] = useState<number>(30);
   const [showCalculator, setShowCalculator] = useState<boolean>(false);
-  const [cart, setCart] = useState<Record<string, CartItem>>({});
+  const [cart, setCart] = useState<Record<string, PdfCartEntry>>({});
   const [isCartOpen, setIsCartOpen] = useState<boolean>(false);
   const [darkMode, setDarkMode] = useState<boolean>(false);
 
@@ -263,10 +258,9 @@ export default function Home() {
       style={{ overflowAnchor: "none" }}
       className="min-h-screen w-full max-w-full overflow-x-clip flex flex-col text-brand-text relative"
     >
-      {/* Ilustrações decorativas nas margens da página (somente telas amplas xl+) */}
       <MarginIllustrations />
 
-      {/* Faixa Superior de Aviso Artesanal */}
+      {/* Faixa Superior */}
       <div className="bg-brand-espresso text-[#F5EFE6] text-[11px] sm:text-sm py-2 px-3 sm:px-4 text-center border-b border-white/10 relative z-20">
         <div className="max-w-6xl mx-auto flex flex-wrap items-center justify-center gap-x-4 gap-y-0.5">
           <span className="inline-flex items-center gap-1.5 font-medium">
@@ -279,7 +273,7 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Cabeçalho / Navbar Sticky */}
+      {/* Navbar Sticky */}
       <header className="sticky top-0 z-40 bg-brand-bg/95 backdrop-blur-md border-b border-brand-border transition-all">
         <div className="max-w-6xl mx-auto px-3 sm:px-6 lg:px-8 h-16 sm:h-18 flex items-center justify-between gap-2">
           <a href="#" className="flex items-center gap-2.5 sm:gap-3 group min-w-0">
@@ -312,9 +306,13 @@ export default function Home() {
             >
               Calculadora de Festa
             </a>
-            <a href="#tradicao" className="hover:text-brand-primary transition-colors">
-              Nossa Tradição
-            </a>
+            <button
+              type="button"
+              onClick={downloadFullMenuPdf}
+              className="hover:text-brand-primary transition-colors cursor-pointer"
+            >
+              Cardápio em PDF
+            </button>
           </nav>
 
           <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
@@ -323,7 +321,6 @@ export default function Home() {
               onClick={toggleDarkMode}
               className="inline-flex items-center justify-center gap-1.5 w-9 h-9 sm:w-auto sm:h-auto sm:px-3 sm:py-2 rounded-full bg-brand-card border border-brand-border hover:border-brand-primary text-brand-heading text-xs font-bold shadow-2xs transition-all cursor-pointer"
               aria-label={darkMode ? "Ativar modo claro" : "Ativar modo escuro"}
-              title={darkMode ? "Mudar para modo claro" : "Mudar para modo escuro (Cacau)"}
             >
               {darkMode ? (
                 <>
@@ -347,7 +344,6 @@ export default function Home() {
               type="button"
               onClick={() => setIsCartOpen(true)}
               className="relative inline-flex items-center gap-1.5 px-3 py-2 rounded-full bg-brand-card border border-brand-border hover:border-brand-primary text-brand-heading text-xs sm:text-sm font-bold shadow-2xs transition-all cursor-pointer"
-              aria-label="Abrir lista de orçamento"
             >
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4 text-brand-primary shrink-0">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
@@ -404,12 +400,12 @@ export default function Home() {
                     Salgados, doces e tortas feitos à mão, com aquele capricho de receita de família para levar o melhor sabor à sua festa.
                   </p>
 
-                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center lg:justify-start gap-2.5 sm:gap-3.5 mb-5 sm:mb-7">
+                  <div className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center justify-center lg:justify-start gap-2.5 sm:gap-3 mb-5 sm:mb-7">
                     <a
                       href="#cardapio"
-                      className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl sm:rounded-full bg-brand-primary hover:bg-brand-primary-hover text-white font-bold text-sm sm:text-base shadow-md transition-all"
+                      className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl sm:rounded-full bg-brand-primary hover:bg-brand-primary-hover text-white font-bold text-sm shadow-md transition-all"
                     >
-                      <span>Ver Cardápio Completo</span>
+                      <span>Ver Cardápio</span>
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" className="w-4 h-4">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
                       </svg>
@@ -417,12 +413,22 @@ export default function Home() {
                     <button
                       type="button"
                       onClick={() => setShowCalculator((prev) => !prev)}
-                      className="inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-2xl sm:rounded-full bg-brand-bg-alt hover:bg-brand-border text-brand-heading font-bold text-sm sm:text-base transition-all cursor-pointer"
+                      className="inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-2xl sm:rounded-full bg-brand-bg-alt hover:bg-brand-border text-brand-heading font-bold text-sm transition-all cursor-pointer"
                     >
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4 text-brand-primary shrink-0">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
                       </svg>
-                      <span>Calcular Quantidade p/ Festa</span>
+                      <span>Calculadora de Festa</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={downloadFullMenuPdf}
+                      className="inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-2xl sm:rounded-full bg-brand-card hover:bg-brand-bg-alt text-brand-heading font-bold text-sm border border-brand-border transition-all cursor-pointer"
+                    >
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4 text-brand-primary shrink-0">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      </svg>
+                      <span>Baixar Cardápio PDF</span>
                     </button>
                   </div>
 
@@ -556,126 +562,12 @@ export default function Home() {
               </div>
 
               {showCalculator && (
-                <div
-                  id="calculadora"
-                  className="mt-6 pt-6 border-t border-brand-border animate-in fade-in duration-200"
-                >
-                  <div className="bg-brand-bg rounded-2xl p-4 sm:p-6 border border-brand-border">
-                    <div className="flex items-start justify-between gap-4 mb-4">
-                      <div>
-                        <span className="text-xs font-bold uppercase tracking-wider text-brand-primary">
-                          Sugestão para Convidados
-                        </span>
-                        <h3 className="font-serif text-lg sm:text-2xl font-bold text-brand-heading">
-                          Calculadora de Festa
-                        </h3>
-                        <p className="text-xs sm:text-sm text-brand-muted mt-0.5">
-                          Média: <strong>10 salgados/pessoa</strong> (5 fritos + 5 de forno) e <strong>5 doces/pessoa</strong>.
-                        </p>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => setShowCalculator(false)}
-                        className="text-xs font-bold text-brand-muted hover:text-brand-heading underline cursor-pointer shrink-0"
-                      >
-                        Fechar
-                      </button>
-                    </div>
-
-                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 items-center">
-                      <div className="lg:col-span-5 bg-brand-card p-4 rounded-xl border border-brand-border">
-                        <label className="block text-xs font-bold uppercase tracking-wider text-brand-muted mb-2">
-                          Convidados:{" "}
-                          <span className="text-brand-primary text-base font-extrabold">{guestCount} pessoas</span>
-                        </label>
-                        <input
-                          type="range"
-                          min={10}
-                          max={200}
-                          step={5}
-                          value={guestCount}
-                          onChange={(e) => setGuestCount(Number(e.target.value))}
-                          className="w-full accent-[#C2593F] cursor-pointer"
-                        />
-                        <div className="grid grid-cols-6 gap-1 text-[11px] text-brand-muted font-semibold mt-2">
-                          {[20, 30, 50, 80, 100, 150].map((num) => (
-                            <button
-                              key={num}
-                              type="button"
-                              onClick={() => setGuestCount(num)}
-                              className={`py-1.5 rounded-lg transition-colors cursor-pointer text-center ${
-                                guestCount === num
-                                  ? "bg-brand-primary text-white font-bold"
-                                  : "bg-brand-bg hover:bg-brand-bg-alt"
-                              }`}
-                            >
-                              {num}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-
-                      <div className="lg:col-span-7 grid grid-cols-3 gap-2 sm:gap-3">
-                        <div className="bg-brand-card p-3 sm:p-4 rounded-xl border border-brand-border text-center">
-                          <span className="text-[11px] sm:text-xs text-brand-muted font-semibold block">
-                            Salgados
-                          </span>
-                          <strong className="font-serif text-xl sm:text-3xl font-bold text-brand-heading block my-0.5 sm:my-1">
-                            {guestCount * 10}
-                          </strong>
-                          <span className="text-[10px] sm:text-[11px] text-brand-muted font-medium block">
-                            {guestCount * 5} fritos + {guestCount * 5} forno
-                          </span>
-                        </div>
-                        <div className="bg-brand-card p-3 sm:p-4 rounded-xl border border-brand-border text-center">
-                          <span className="text-[11px] sm:text-xs text-brand-muted font-semibold block">
-                            Docinhos
-                          </span>
-                          <strong className="font-serif text-xl sm:text-3xl font-bold text-brand-primary block my-0.5 sm:my-1">
-                            {guestCount * 5}
-                          </strong>
-                          <span className="text-[10px] sm:text-[11px] text-brand-muted font-medium block">
-                            5 por pessoa
-                          </span>
-                        </div>
-                        <div className="bg-brand-card p-3 sm:p-4 rounded-xl border border-brand-border text-center">
-                          <span className="text-[11px] sm:text-xs text-brand-muted font-semibold block">
-                            Tortas 30cm
-                          </span>
-                          <strong className="font-serif text-xl sm:text-3xl font-bold text-brand-gold block my-0.5 sm:my-1">
-                            {Math.max(1, Math.ceil(guestCount / 25))}
-                          </strong>
-                          <span className="text-[10px] sm:text-[11px] text-brand-muted font-medium block">
-                            Sugestão p/ mesa
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="mt-4 pt-3.5 border-t border-brand-border/70 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5">
-                      <span className="text-xs text-brand-muted text-center sm:text-left">
-                        💡 Quer consultar um orçamento para <strong>{guestCount} convidados</strong>?
-                      </span>
-                      <a
-                        href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
-                          `Olá, Tânia! Usei a calculadora do site para uma festa de *${guestCount} convidados* (estimativa de *${
-                            guestCount * 10
-                          } salgados* — sendo ${guestCount * 5} fritos e ${
-                            guestCount * 5
-                          } de forno — e *${
-                            guestCount * 5
-                          } doces*) e gostaria de fazer um orçamento!`
-                        )}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl sm:rounded-full bg-brand-espresso hover:bg-brand-primary text-white text-xs font-bold transition-colors"
-                      >
-                        <span>Orçar para {guestCount} pessoas no WhatsApp</span>
-                        <span>→</span>
-                      </a>
-                    </div>
-                  </div>
-                </div>
+                <PartyCalculator
+                  guestCount={guestCount}
+                  setGuestCount={setGuestCount}
+                  onClose={() => setShowCalculator(false)}
+                  whatsappNumber={whatsappNumber}
+                />
               )}
             </div>
           </div>
@@ -695,7 +587,7 @@ export default function Home() {
             </p>
           </div>
 
-          {/* Seletor de Categorias Mobile (Swipe Horizontal) */}
+          {/* Seletor de Categorias Mobile */}
           <div className="flex sm:hidden items-center gap-2 overflow-x-auto no-scrollbar pb-2 mb-4 -mx-3.5 px-3.5">
             {menuData.map((section) => {
               const isActive = activeTab === section.category && searchQuery.trim() === "";
@@ -1457,7 +1349,7 @@ export default function Home() {
                   Confirme pelo WhatsApp
                 </h3>
                 <p className="text-xs sm:text-sm text-brand-muted leading-relaxed">
-                  Envie sua lista pelo WhatsApp para conferirmos disponibilidade da data, quantidades mínimas e sabores sob consulta.
+                  Envie sua lista pelo WhatsApp (ou baixe em PDF) para conferirmos disponibilidade da data, quantidades mínimas e sabores sob consulta.
                 </p>
               </div>
 
@@ -1484,7 +1376,15 @@ export default function Home() {
             <p className="font-serif font-bold text-base text-brand-heading">Buffet da Tânia</p>
             <p>Salgados, doces, tortas doces & salgadas e vinagretes artesanais sob encomenda.</p>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex flex-wrap items-center justify-center gap-4">
+            <button
+              type="button"
+              onClick={downloadFullMenuPdf}
+              className="font-bold text-brand-heading hover:text-brand-primary underline cursor-pointer"
+            >
+              Baixar Cardápio em PDF
+            </button>
+            <span>•</span>
             <a
               href={getGeneralWhatsAppLink()}
               target="_blank"
@@ -1501,196 +1401,18 @@ export default function Home() {
         </div>
       </footer>
 
-      {/* MODAL / DRAWER DA LISTA DE ORÇAMENTO */}
-      {isCartOpen && (
-        <div className="fixed inset-0 z-50 flex items-end sm:items-stretch justify-end bg-black/55 backdrop-blur-xs animate-in fade-in duration-200">
-          <div className="bg-brand-card w-full sm:max-w-md h-[88vh] sm:h-full rounded-t-3xl sm:rounded-none flex flex-col shadow-2xl border-t sm:border-t-0 sm:border-l border-brand-border">
-            <div className="p-4 sm:p-6 border-b border-brand-border flex items-center justify-between bg-brand-bg rounded-t-3xl sm:rounded-none">
-              <div>
-                <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest text-brand-primary block">
-                  Simulador de Pedido
-                </span>
-                <h3 className="font-serif text-xl sm:text-2xl font-bold text-brand-heading">
-                  Minha Lista de Orçamento
-                </h3>
-              </div>
-              <button
-                type="button"
-                onClick={() => setIsCartOpen(false)}
-                className="w-9 h-9 rounded-full bg-brand-card border border-brand-border flex items-center justify-center text-brand-heading hover:bg-brand-primary hover:text-white transition-colors cursor-pointer"
-                aria-label="Fechar lista"
-              >
-                ✕
-              </button>
-            </div>
-
-            <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-3.5">
-              {cartEntries.length === 0 ? (
-                <div className="text-center py-12">
-                  <div className="w-14 h-14 rounded-full bg-brand-bg text-brand-muted flex items-center justify-center mx-auto mb-3">
-                    <CategoryIcon category="Salgados de Forno" className="w-7 h-7" />
-                  </div>
-                  <p className="font-serif font-bold text-lg text-brand-heading">
-                    Sua lista ainda está vazia
-                  </p>
-                  <p className="text-xs sm:text-sm text-brand-muted mt-1 max-w-xs mx-auto leading-relaxed">
-                    Toque nos botões <strong>+10, +50 ou +100</strong> nos itens do cardápio para montar seu pedido e enviar tudo pelo WhatsApp.
-                  </p>
-                </div>
-              ) : (
-                <>
-                  <div className="flex items-center justify-between text-xs text-brand-muted pb-2 border-b border-brand-border">
-                    <span>{cartEntries.length} itens selecionados</span>
-                    <button
-                      type="button"
-                      onClick={clearCart}
-                      className="text-brand-primary font-bold hover:underline cursor-pointer"
-                    >
-                      Limpar toda a lista
-                    </button>
-                  </div>
-
-                  <div className="p-3 rounded-xl bg-brand-bg border border-brand-border text-[11px] text-brand-muted leading-relaxed">
-                    💡 <strong>Nota:</strong> Alguns itens possuem quantidade mínima por sabor, que será confirmada com a Tânia pelo WhatsApp.
-                  </div>
-
-                  {cartEntries.map((entry) => {
-                    const isUnit = entry.unitLabel === "un";
-                    return (
-                      <div
-                        key={entry.item.id}
-                        className="bg-brand-bg/60 rounded-2xl p-3.5 border border-brand-border flex flex-col gap-2.5"
-                      >
-                        <div className="flex items-start justify-between gap-2">
-                          <div className="min-w-0">
-                            <span className="text-[10px] font-bold uppercase tracking-wider text-brand-muted block">
-                              {entry.category}
-                            </span>
-                            <h4 className="font-serif font-bold text-base text-brand-heading">
-                              {entry.item.name}
-                            </h4>
-                            <span className="text-xs font-semibold text-brand-primary">
-                              {entry.item.price > 0
-                                ? `R$ ${formatBRL(entry.item.price * entry.quantity)} (R$ ${formatBRL(
-                                    entry.item.price
-                                  )}/${entry.unitLabel})`
-                                : "Valor e sabores sob consulta"}
-                            </span>
-                          </div>
-                          <button
-                            type="button"
-                            onClick={() => handleDeleteFromCart(entry.item.id)}
-                            className="text-xs text-brand-muted hover:text-brand-primary px-1.5 py-0.5 cursor-pointer"
-                            title="Remover item"
-                          >
-                            ✕
-                          </button>
-                        </div>
-
-                        <div className="flex items-center justify-between gap-2 pt-2 border-t border-brand-border/60">
-                          <div className="inline-flex items-center bg-brand-card border border-brand-border rounded-xl p-1">
-                            <button
-                              type="button"
-                              onClick={() =>
-                                handleRemoveFromCart(entry.item.id, isUnit ? 10 : 1)
-                              }
-                              className="px-2.5 py-1 rounded-lg hover:bg-brand-bg-alt font-extrabold text-xs cursor-pointer"
-                            >
-                              −{isUnit ? "10" : "1"}
-                            </button>
-                            <span className="px-3 text-xs font-extrabold text-brand-heading">
-                              {entry.quantity} {isUnit ? "un" : "x"}
-                            </span>
-                            <button
-                              type="button"
-                              onClick={() =>
-                                handleAddToCart(
-                                  entry.item,
-                                  entry.category,
-                                  entry.unitLabel,
-                                  entry.stepQty,
-                                  isUnit ? 10 : 1
-                                )
-                              }
-                              className="px-2.5 py-1 rounded-lg bg-brand-primary text-white font-extrabold text-xs cursor-pointer"
-                            >
-                              +{isUnit ? "10" : "1"}
-                            </button>
-                          </div>
-
-                          {isUnit && (
-                            <div className="flex items-center gap-1.5">
-                              <button
-                                type="button"
-                                onClick={() =>
-                                  handleAddToCart(
-                                    entry.item,
-                                    entry.category,
-                                    entry.unitLabel,
-                                    entry.stepQty,
-                                    50
-                                  )
-                                }
-                                className="px-2.5 py-1.5 rounded-lg bg-brand-card hover:bg-brand-primary text-brand-heading hover:text-white text-xs font-bold border border-brand-border cursor-pointer"
-                              >
-                                +50
-                              </button>
-                              <button
-                                type="button"
-                                onClick={() =>
-                                  handleAddToCart(
-                                    entry.item,
-                                    entry.category,
-                                    entry.unitLabel,
-                                    entry.stepQty,
-                                    100
-                                  )
-                                }
-                                className="px-2.5 py-1.5 rounded-lg bg-brand-card hover:bg-brand-primary text-brand-heading hover:text-white text-xs font-bold border border-brand-border cursor-pointer"
-                              >
-                                +100
-                              </button>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </>
-              )}
-            </div>
-
-            <div className="p-4 sm:p-6 border-t border-brand-border bg-brand-bg">
-              {cartEntries.length > 0 && (
-                <div className="flex items-center justify-between mb-3.5">
-                  <span className="text-xs font-bold uppercase tracking-wider text-brand-muted">
-                    Total estimado:
-                  </span>
-                  <span className="font-serif font-bold text-2xl text-brand-heading">
-                    R$ {formatBRL(cartTotalValue)}
-                  </span>
-                </div>
-              )}
-
-              <a
-                href={getCartWhatsAppLink()}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full py-3.5 px-5 rounded-2xl sm:rounded-full bg-[#25D366] hover:bg-[#1FB855] text-white font-bold text-sm flex items-center justify-center gap-2.5 shadow-md transition-all"
-              >
-                <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
-                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
-                </svg>
-                <span>
-                  {cartEntries.length > 0
-                    ? "Enviar Lista pelo WhatsApp"
-                    : "Falar Direto no WhatsApp"}
-                </span>
-              </a>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Gaveta Lateral / Bottom Sheet da Minha Lista */}
+      <CartDrawer
+        isOpen={isCartOpen}
+        onClose={() => setIsCartOpen(false)}
+        cartEntries={cartEntries}
+        cartTotalValue={cartTotalValue}
+        onAdd={handleAddToCart}
+        onRemove={handleRemoveFromCart}
+        onDelete={handleDeleteFromCart}
+        onClear={clearCart}
+        whatsappLink={getCartWhatsAppLink()}
+      />
 
       {/* 6. BARRA INFERIOR FIXA */}
       {cartEntries.length > 0 ? (
@@ -1711,17 +1433,31 @@ export default function Home() {
             </div>
           </button>
 
-          <a
-            href={getCartWhatsAppLink()}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="bg-[#25D366] hover:bg-[#1FB855] text-white py-2.5 px-4 sm:px-5 rounded-xl sm:rounded-full font-bold text-xs sm:text-sm flex items-center gap-2 shadow-md transition-all shrink-0"
-          >
-            <span>Enviar Pedido</span>
-            <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 sm:w-5 sm:h-5">
-              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
-            </svg>
-          </a>
+          <div className="flex items-center gap-1.5 shrink-0">
+            <button
+              type="button"
+              onClick={() => downloadQuotePdf(cartEntries, cartTotalValue)}
+              className="bg-white/12 hover:bg-white/20 text-[#FFFDF9] py-2.5 px-3 rounded-xl sm:rounded-full font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer"
+              title="Baixar orçamento em PDF"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4 text-[#E6B35A]">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+              <span className="hidden xs:inline">PDF</span>
+            </button>
+
+            <a
+              href={getCartWhatsAppLink()}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-[#25D366] hover:bg-[#1FB855] text-white py-2.5 px-4 sm:px-5 rounded-xl sm:rounded-full font-bold text-xs sm:text-sm flex items-center gap-2 shadow-md transition-all"
+            >
+              <span>Enviar Pedido</span>
+              <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 sm:w-5 sm:h-5">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
+              </svg>
+            </a>
+          </div>
         </div>
       ) : (
         <a
