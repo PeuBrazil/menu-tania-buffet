@@ -219,24 +219,24 @@ const leftMarginItems: Array<{
   kind: IllustrationKind;
   color: string;
 }> = [
-  { top: "1.5%", left: "18px", size: 78, rotate: -16, kind: "coxinha", color: "text-brand-heading" },
-  { top: "6.5%", left: "64px", size: 54, rotate: 18, kind: "brigadeiro", color: "text-brand-primary" },
-  { top: "11.5%", left: "12px", size: 68, rotate: -10, kind: "empada", color: "text-brand-gold" },
-  { top: "16.8%", left: "56px", size: 84, rotate: 14, kind: "fatia", color: "text-brand-heading" },
-  { top: "22%", left: "16px", size: 58, rotate: -22, kind: "pastel", color: "text-brand-primary" },
-  { top: "27.2%", left: "68px", size: 72, rotate: 12, kind: "trufa", color: "text-brand-gold" },
-  { top: "32.5%", left: "14px", size: 90, rotate: -14, kind: "bolo", color: "text-brand-primary" },
-  { top: "38%", left: "60px", size: 52, rotate: 24, kind: "barquete", color: "text-brand-heading" },
-  { top: "43.2%", left: "20px", size: 74, rotate: -18, kind: "torta30", color: "text-brand-gold" },
-  { top: "48.5%", left: "58px", size: 62, rotate: 15, kind: "morango", color: "text-brand-primary" },
-  { top: "54%", left: "12px", size: 80, rotate: -12, kind: "trouxinha", color: "text-brand-heading" },
-  { top: "59.5%", left: "64px", size: 56, rotate: 20, kind: "fouet", color: "text-brand-gold" },
-  { top: "65%", left: "18px", size: 70, rotate: -20, kind: "brigadeiro", color: "text-brand-primary" },
-  { top: "70.5%", left: "54px", size: 82, rotate: 10, kind: "coxinha", color: "text-brand-heading" },
-  { top: "76%", left: "14px", size: 60, rotate: -15, kind: "fatia", color: "text-brand-gold" },
-  { top: "81.5%", left: "62px", size: 74, rotate: 18, kind: "empada", color: "text-brand-primary" },
-  { top: "87.5%", left: "16px", size: 66, rotate: -12, kind: "pastel", color: "text-brand-heading" },
-  { top: "93.5%", left: "52px", size: 76, rotate: 14, kind: "bolo", color: "text-brand-gold" },
+  { top: "140px", left: "18px", size: 78, rotate: -16, kind: "coxinha", color: "text-brand-heading" },
+  { top: "380px", left: "64px", size: 54, rotate: 18, kind: "brigadeiro", color: "text-brand-primary" },
+  { top: "640px", left: "12px", size: 68, rotate: -10, kind: "empada", color: "text-brand-gold" },
+  { top: "900px", left: "56px", size: 84, rotate: 14, kind: "fatia", color: "text-brand-heading" },
+  { top: "1180px", left: "16px", size: 58, rotate: -22, kind: "pastel", color: "text-brand-primary" },
+  { top: "1440px", left: "68px", size: 72, rotate: 12, kind: "trufa", color: "text-brand-gold" },
+  { top: "1720px", left: "14px", size: 90, rotate: -14, kind: "bolo", color: "text-brand-primary" },
+  { top: "2000px", left: "60px", size: 52, rotate: 24, kind: "barquete", color: "text-brand-heading" },
+  { top: "2280px", left: "20px", size: 74, rotate: -18, kind: "torta30", color: "text-brand-gold" },
+  { top: "2560px", left: "58px", size: 62, rotate: 15, kind: "morango", color: "text-brand-primary" },
+  { top: "2840px", left: "12px", size: 80, rotate: -12, kind: "trouxinha", color: "text-brand-heading" },
+  { top: "3120px", left: "64px", size: 56, rotate: 20, kind: "fouet", color: "text-brand-gold" },
+  { top: "3400px", left: "18px", size: 70, rotate: -20, kind: "brigadeiro", color: "text-brand-primary" },
+  { top: "3680px", left: "54px", size: 82, rotate: 10, kind: "coxinha", color: "text-brand-heading" },
+  { top: "3960px", left: "14px", size: 60, rotate: -15, kind: "fatia", color: "text-brand-gold" },
+  { top: "4240px", left: "62px", size: 74, rotate: 18, kind: "empada", color: "text-brand-primary" },
+  { top: "4520px", left: "16px", size: 66, rotate: -12, kind: "pastel", color: "text-brand-heading" },
+  { top: "4800px", left: "52px", size: 76, rotate: 14, kind: "bolo", color: "text-brand-gold" },
 ];
 
 const rightMarginItems: Array<{
@@ -247,24 +247,24 @@ const rightMarginItems: Array<{
   kind: IllustrationKind;
   color: string;
 }> = [
-  { top: "2.2%", right: "20px", size: 82, rotate: 15, kind: "bolo", color: "text-brand-primary" },
-  { top: "7.5%", right: "62px", size: 58, rotate: -18, kind: "pastel", color: "text-brand-heading" },
-  { top: "12.8%", right: "14px", size: 72, rotate: 12, kind: "trufa", color: "text-brand-gold" },
-  { top: "18%", right: "58px", size: 64, rotate: -14, kind: "coxinha", color: "text-brand-primary" },
-  { top: "23.5%", right: "16px", size: 86, rotate: 18, kind: "torta30", color: "text-brand-heading" },
-  { top: "29%", right: "64px", size: 54, rotate: -22, kind: "morango", color: "text-brand-gold" },
-  { top: "34.2%", right: "18px", size: 76, rotate: 10, kind: "brigadeiro", color: "text-brand-primary" },
-  { top: "39.5%", right: "56px", size: 66, rotate: -16, kind: "empada", color: "text-brand-heading" },
-  { top: "45%", right: "12px", size: 80, rotate: 20, kind: "fatia", color: "text-brand-gold" },
-  { top: "50.5%", right: "60px", size: 56, rotate: -12, kind: "fouet", color: "text-brand-primary" },
-  { top: "56%", right: "16px", size: 74, rotate: 14, kind: "barquete", color: "text-brand-heading" },
-  { top: "61.5%", right: "58px", size: 68, rotate: -19, kind: "trouxinha", color: "text-brand-gold" },
-  { top: "67%", right: "14px", size: 84, rotate: 16, kind: "bolo", color: "text-brand-primary" },
-  { top: "72.5%", right: "62px", size: 58, rotate: -15, kind: "trufa", color: "text-brand-heading" },
-  { top: "78%", right: "18px", size: 72, rotate: 12, kind: "coxinha", color: "text-brand-gold" },
-  { top: "83.5%", right: "54px", size: 64, rotate: -20, kind: "brigadeiro", color: "text-brand-primary" },
-  { top: "89%", right: "16px", size: 78, rotate: 15, kind: "torta30", color: "text-brand-heading" },
-  { top: "94.5%", right: "58px", size: 62, rotate: -14, kind: "morango", color: "text-brand-gold" },
+  { top: "180px", right: "20px", size: 82, rotate: 15, kind: "bolo", color: "text-brand-primary" },
+  { top: "440px", right: "62px", size: 58, rotate: -18, kind: "pastel", color: "text-brand-heading" },
+  { top: "700px", right: "14px", size: 72, rotate: 12, kind: "trufa", color: "text-brand-gold" },
+  { top: "960px", right: "58px", size: 64, rotate: -14, kind: "coxinha", color: "text-brand-primary" },
+  { top: "1240px", right: "16px", size: 86, rotate: 18, kind: "torta30", color: "text-brand-heading" },
+  { top: "1520px", right: "64px", size: 54, rotate: -22, kind: "morango", color: "text-brand-gold" },
+  { top: "1800px", right: "18px", size: 76, rotate: 10, kind: "brigadeiro", color: "text-brand-primary" },
+  { top: "2080px", right: "56px", size: 66, rotate: -16, kind: "empada", color: "text-brand-heading" },
+  { top: "2360px", right: "12px", size: 80, rotate: 20, kind: "fatia", color: "text-brand-gold" },
+  { top: "2640px", right: "60px", size: 56, rotate: -12, kind: "fouet", color: "text-brand-primary" },
+  { top: "2920px", right: "16px", size: 74, rotate: 14, kind: "barquete", color: "text-brand-heading" },
+  { top: "3200px", right: "58px", size: 68, rotate: -19, kind: "trouxinha", color: "text-brand-gold" },
+  { top: "3480px", right: "14px", size: 84, rotate: 16, kind: "bolo", color: "text-brand-primary" },
+  { top: "3760px", right: "62px", size: 58, rotate: -15, kind: "trufa", color: "text-brand-heading" },
+  { top: "4040px", right: "18px", size: 72, rotate: 12, kind: "coxinha", color: "text-brand-gold" },
+  { top: "4320px", right: "54px", size: 64, rotate: -20, kind: "brigadeiro", color: "text-brand-primary" },
+  { top: "4600px", right: "16px", size: 78, rotate: 15, kind: "torta30", color: "text-brand-heading" },
+  { top: "4880px", right: "58px", size: 62, rotate: -14, kind: "morango", color: "text-brand-gold" },
 ];
 
 /* Ilustrações gastronômicas distribuídas ao longo de toda a página (visíveis apenas em telas amplas onde há margem lateral) */
@@ -272,6 +272,7 @@ function MarginIllustrations() {
   return (
     <div
       aria-hidden="true"
+      style={{ overflowAnchor: "none" }}
       className="pointer-events-none absolute inset-0 z-0 overflow-hidden hidden xl:block"
     >
       {/* Coluna Esquerda */}
@@ -553,7 +554,10 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen w-full max-w-full overflow-x-hidden flex flex-col text-brand-text relative">
+    <div
+      style={{ overflowAnchor: "none" }}
+      className="min-h-screen w-full max-w-full overflow-x-clip flex flex-col text-brand-text relative"
+    >
       {/* Ilustrações decorativas nas margens da página (somente telas amplas xl+) */}
       <MarginIllustrations />
 
