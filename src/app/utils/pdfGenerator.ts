@@ -1,3 +1,4 @@
+import { jsPDF } from "jspdf";
 import { MenuItem, menuData } from "../data/menu";
 
 export type PdfCartEntry = {
@@ -12,544 +13,397 @@ const formatBRL = (val: number) =>
   val.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
 /**
- * Abre uma janela/aba formatada com papelaria personalizada do Buffet da Tânia
- * (cores creme, chocolate, terracota e dourado, fontes Fraunces e Plus Jakarta Sans)
- * pronta para salvar como PDF em qualquer dispositivo (celular ou computador).
+ * Desenha a moldura de papelaria artesanal (fundo creme e bordas duplas) na página atual do PDF
  */
-function openStyledPdfDocument(title: string, bodyHtml: string) {
-  const printWindow = window.open("", "_blank");
-  if (!printWindow) {
-    alert("Por favor, permita pop-ups neste site para gerar e baixar o PDF.");
-    return;
-  }
+function drawPageBackgroundAndFrame(doc: jsPDF) {
+  // Fundo creme suave
+  doc.setFillColor(255, 253, 249); // #FFFDF9
+  doc.rect(0, 0, 210, 297, "F");
 
-  const html = `<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>${title}</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;1,9..144,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      -webkit-print-color-adjust: exact !important;
-      print-color-adjust: exact !important;
-    }
+  // Borda externa
+  doc.setDrawColor(228, 214, 195); // #E4D6C3
+  doc.setLineWidth(0.7);
+  doc.roundedRect(8, 8, 194, 281, 4, 4, "S");
 
-    @page {
-      size: A4;
-      margin: 10mm;
-    }
-
-    body {
-      background-color: #F5EFE6;
-      color: #4A332A;
-      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-      padding: 24px 16px 48px;
-      line-height: 1.45;
-    }
-
-    .toolbar {
-      max-width: 820px;
-      margin: 0 auto 20px;
-      background: #352119;
-      color: #FFFDF9;
-      padding: 12px 20px;
-      border-radius: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      box-shadow: 0 10px 25px rgba(53, 33, 25, 0.18);
-    }
-
-    .toolbar-info {
-      font-size: 13px;
-      color: #EFE5D8;
-    }
-
-    .toolbar-actions {
-      display: flex;
-      gap: 10px;
-    }
-
-    .btn-print {
-      background: #C2593F;
-      color: #FFFFFF;
-      border: none;
-      padding: 9px 18px;
-      border-radius: 999px;
-      font-weight: 700;
-      font-size: 13px;
-      cursor: pointer;
-      font-family: inherit;
-    }
-
-    .btn-close {
-      background: rgba(255, 255, 255, 0.12);
-      color: #FFFDF9;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      padding: 9px 14px;
-      border-radius: 999px;
-      font-weight: 600;
-      font-size: 13px;
-      cursor: pointer;
-      font-family: inherit;
-    }
-
-    .sheet {
-      max-width: 820px;
-      margin: 0 auto;
-      background: #FFFDF9;
-      border: 2px solid #E4D6C3;
-      border-radius: 24px;
-      padding: 32px 36px;
-      position: relative;
-      box-shadow: 0 15px 40px rgba(74, 51, 42, 0.08);
-    }
-
-    .sheet-inner-border {
-      border: 1px solid #EBE1D1;
-      border-radius: 18px;
-      padding: 28px;
-    }
-
-    .header {
-      text-align: center;
-      padding-bottom: 22px;
-      margin-bottom: 24px;
-      border-bottom: 2px solid #E4D6C3;
-    }
-
-    .emblem {
-      width: 54px;
-      height: 54px;
-      border-radius: 50%;
-      background: #352119;
-      border: 2.5px solid #E6B35A;
-      color: #E6B35A;
-      font-family: 'Fraunces', Georgia, serif;
-      font-size: 28px;
-      font-weight: 700;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 10px;
-    }
-
-    .tag-top {
-      display: block;
-      font-size: 10px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.22em;
-      color: #C2593F;
-      margin-bottom: 4px;
-    }
-
-    .brand-title {
-      font-family: 'Fraunces', Georgia, serif;
-      font-size: 34px;
-      font-weight: 700;
-      color: #352119;
-      line-height: 1.1;
-    }
-
-    .brand-subtitle {
-      font-family: 'Fraunces', Georgia, serif;
-      font-style: italic;
-      font-size: 16px;
-      color: #C2593F;
-      margin-top: 4px;
-    }
-
-    .contact-bar {
-      margin-top: 12px;
-      display: inline-flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      background: #F5EFE6;
-      border: 1px solid #E4D6C3;
-      padding: 6px 16px;
-      border-radius: 999px;
-      font-size: 11.5px;
-      font-weight: 600;
-      color: #4A332A;
-    }
-
-    .section-block {
-      margin-bottom: 26px;
-      break-inside: avoid-page;
-    }
-
-    .section-header {
-      background: #352119;
-      color: #FFFDF9;
-      padding: 8px 16px;
-      border-radius: 10px;
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      margin-bottom: 12px;
-    }
-
-    .section-title {
-      font-family: 'Fraunces', Georgia, serif;
-      font-size: 18px;
-      font-weight: 700;
-      color: #FFFDF9;
-    }
-
-    .section-meta {
-      font-size: 11px;
-      color: #E6B35A;
-      font-weight: 600;
-    }
-
-    .menu-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px 24px;
-    }
-
-    .menu-item {
-      padding-bottom: 7px;
-      border-bottom: 1px dashed #E4D6C3;
-      break-inside: avoid;
-    }
-
-    .menu-item-top {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      gap: 8px;
-    }
-
-    .menu-item-name {
-      font-family: 'Fraunces', Georgia, serif;
-      font-size: 13.5px;
-      font-weight: 700;
-      color: #352119;
-    }
-
-    .menu-item-price {
-      font-weight: 800;
-      font-size: 13px;
-      color: #C2593F;
-      white-space: nowrap;
-    }
-
-    .menu-item-cento {
-      font-size: 10px;
-      font-weight: 600;
-      color: #72554A;
-      margin-left: 4px;
-    }
-
-    .menu-item-desc {
-      font-size: 11px;
-      color: #72554A;
-      margin-top: 2px;
-      line-height: 1.35;
-    }
-
-    /* Tabela de Orçamento */
-    .quote-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 20px;
-    }
-
-    .quote-table th {
-      background: #352119;
-      color: #FFFDF9;
-      text-align: left;
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      padding: 10px 12px;
-    }
-
-    .quote-table th:first-child {
-      border-top-left-radius: 10px;
-      border-bottom-left-radius: 10px;
-    }
-
-    .quote-table th:last-child {
-      border-top-right-radius: 10px;
-      border-bottom-right-radius: 10px;
-      text-align: right;
-    }
-
-    .quote-table td {
-      padding: 10px 12px;
-      border-bottom: 1px solid #EBE1D1;
-      font-size: 13px;
-      color: #4A332A;
-    }
-
-    .quote-table td:last-child {
-      text-align: right;
-      font-weight: 700;
-      color: #352119;
-    }
-
-    .total-box {
-      background: #F5EFE6;
-      border: 2px solid #D4953B;
-      border-radius: 14px;
-      padding: 16px 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-top: 16px;
-    }
-
-    .total-label {
-      font-size: 13px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: #4A332A;
-    }
-
-    .total-value {
-      font-family: 'Fraunces', Georgia, serif;
-      font-size: 26px;
-      font-weight: 700;
-      color: #352119;
-    }
-
-    .note-box {
-      margin-top: 20px;
-      background: #FFF8EB;
-      border: 1px solid #E6C891;
-      border-radius: 12px;
-      padding: 12px 16px;
-      font-size: 11.5px;
-      color: #4A332A;
-    }
-
-    .footer {
-      margin-top: 24px;
-      padding-top: 14px;
-      border-top: 1px solid #E4D6C3;
-      text-align: center;
-      font-size: 11px;
-      color: #72554A;
-    }
-
-    @media (max-width: 640px) {
-      .sheet {
-        padding: 16px;
-      }
-      .sheet-inner-border {
-        padding: 16px;
-      }
-      .menu-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    @media print {
-      body {
-        background: #FFFFFF;
-        padding: 0;
-      }
-      .toolbar {
-        display: none !important;
-      }
-      .sheet {
-        box-shadow: none;
-        border: 1.5px solid #E4D6C3;
-        padding: 16px;
-        max-width: 100%;
-      }
-    }
-  </style>
-</head>
-<body>
-  <div class="toolbar">
-    <div class="toolbar-info">
-      <strong>📄 Visualização pronta para PDF</strong> — Clique em "Salvar em PDF / Imprimir" e escolha <em>Salvar como PDF</em>.
-    </div>
-    <div class="toolbar-actions">
-      <button class="btn-print" onclick="window.print()">🖨️ Salvar em PDF / Imprimir</button>
-      <button class="btn-close" onclick="window.close()">Fechar</button>
-    </div>
-  </div>
-
-  <div class="sheet">
-    <div class="sheet-inner-border">
-      <div class="header">
-        <div class="emblem">T</div>
-        <span class="tag-top">Receitas de Família • Feito à Mão</span>
-        <h1 class="brand-title">Buffet da Tânia</h1>
-        <p class="brand-subtitle">Salgados, doces e tortas artesanais sob encomenda</p>
-        <div class="contact-bar">
-          <span>📱 WhatsApp: (71) 99153-0019</span>
-          <span>•</span>
-          <span>🌐 menu-tania-buffet.vercel.app</span>
-        </div>
-      </div>
-
-      ${bodyHtml}
-
-      <div class="footer">
-        Buffet da Tânia • Produção 100% artesanal sob encomenda agendada • WhatsApp: (71) 99153-0019
-      </div>
-    </div>
-  </div>
-
-  <script>
-    window.onload = function() {
-      setTimeout(function() {
-        window.print();
-      }, 450);
-    };
-  </script>
-</body>
-</html>`;
-
-  printWindow.document.open();
-  printWindow.document.write(html);
-  printWindow.document.close();
+  // Borda interna fina
+  doc.setDrawColor(235, 225, 209); // #EBE1D1
+  doc.setLineWidth(0.3);
+  doc.roundedRect(10.5, 10.5, 189, 276, 3, 3, "S");
 }
 
 /**
- * Gera o PDF do Cardápio Completo do Buffet da Tânia
+ * Desenha o cabeçalho principal do Buffet da Tânia na primeira página e retorna o Y inicial do conteúdo
+ */
+function drawMainHeader(doc: jsPDF, subtitleText: string): number {
+  // Círculo do emblema "T"
+  doc.setFillColor(53, 33, 25); // #352119
+  doc.setDrawColor(230, 179, 90); // #E6B35A
+  doc.setLineWidth(0.9);
+  doc.circle(105, 23, 7.5, "FD");
+
+  doc.setFont("times", "bold");
+  doc.setFontSize(18);
+  doc.setTextColor(230, 179, 90); // #E6B35A
+  doc.text("T", 105, 25.3, { align: "center" });
+
+  // Tag superior
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(7.5);
+  doc.setTextColor(194, 89, 63); // #C2593F
+  doc.text("RECEITAS DE FAMÍLIA  •  FEITO À MÃO", 105, 35.5, { align: "center" });
+
+  // Título Principal
+  doc.setFont("times", "bold");
+  doc.setFontSize(24);
+  doc.setTextColor(53, 33, 25); // #352119
+  doc.text("Buffet da Tânia", 105, 44, { align: "center" });
+
+  // Subtítulo
+  doc.setFont("times", "italic");
+  doc.setFontSize(11);
+  doc.setTextColor(194, 89, 63); // #C2593F
+  doc.text(subtitleText, 105, 49.5, { align: "center" });
+
+  // Pílula de Contato
+  doc.setFillColor(245, 239, 230); // #F5EFE6
+  doc.setDrawColor(228, 214, 195); // #E4D6C3
+  doc.setLineWidth(0.35);
+  doc.roundedRect(52, 53, 106, 6.8, 3.4, 3.4, "FD");
+
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(8);
+  doc.setTextColor(74, 51, 42); // #4A332A
+  doc.text("WhatsApp: (71) 99153-0019   •   menu-tania-buffet.vercel.app", 105, 57.5, {
+    align: "center",
+  });
+
+  // Linha divisória do cabeçalho
+  doc.setDrawColor(228, 214, 195);
+  doc.setLineWidth(0.5);
+  doc.line(16, 63.5, 194, 63.5);
+
+  return 69;
+}
+
+/**
+ * Adiciona numeração de páginas e rodapé em todas as páginas geradas
+ */
+function addFootersToAllPages(doc: jsPDF) {
+  const pageCount = doc.getNumberOfPages();
+  for (let i = 1; i <= pageCount; i++) {
+    doc.setPage(i);
+    doc.setDrawColor(228, 214, 195);
+    doc.setLineWidth(0.3);
+    doc.line(16, 279, 194, 279);
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(7.5);
+    doc.setTextColor(114, 85, 74); // #72554A
+    doc.text(
+      "Buffet da Tânia • Produção 100% artesanal sob encomenda • WhatsApp: (71) 99153-0019",
+      16,
+      283.5
+    );
+    doc.setFont("helvetica", "bold");
+    doc.text(`Página ${i} de ${pageCount}`, 194, 283.5, { align: "right" });
+  }
+}
+
+/**
+ * Gera e faz o download direto do arquivo Cardapio-Completo-Buffet-da-Tania.pdf
  */
 export function downloadFullMenuPdf() {
-  const sectionsHtml = menuData
-    .map((section) => {
-      const isUnit = section.unitLabel === "un";
-      const itemsHtml = section.items
-        .map((item) => {
-          const priceText =
-            item.price === 0
-              ? "Sob consulta"
-              : `R$ ${formatBRL(item.price)}/${section.unitLabel}`;
-          const centoText =
-            item.price > 0 && isUnit
-              ? `<span class="menu-item-cento">(Cento: R$ ${formatBRL(item.price * 100)})</span>`
-              : "";
+  const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+  drawPageBackgroundAndFrame(doc);
+  let y = drawMainHeader(doc, "Cardápio Completo de Encomendas para Festas & Eventos");
 
-          return `
-            <div class="menu-item">
-              <div class="menu-item-top">
-                <span class="menu-item-name">${item.name}</span>
-                <span class="menu-item-price">${priceText}${centoText}</span>
-              </div>
-              ${item.description ? `<p class="menu-item-desc">${item.description}</p>` : ""}
-            </div>
-          `;
-        })
-        .join("");
+  const pageBottomLimit = 273;
+  const colWidth = 85;
+  const col1X = 16;
+  const col2X = 109;
 
-      return `
-        <div class="section-block">
-          <div class="section-header">
-            <span class="section-title">${section.category}</span>
-            <span class="section-meta">${section.items.length} opções</span>
-          </div>
-          <div class="menu-grid">
-            ${itemsHtml}
-          </div>
-        </div>
-      `;
-    })
-    .join("");
+  for (const section of menuData) {
+    const isUnit = section.unitLabel === "un";
 
-  const sweetCakesNote = `
-    <div class="note-box">
-      <strong>🎂 Tortas Doces Sob Encomenda (Mediante Consulta):</strong>
-      Também preparamos tortas doces confeitadas em marshmallow/chantininho ou inteiras tradicionais (brigadeiro, chocolate, doce de leite) com recheios variados a combinar pelo WhatsApp.
-      <br/><br/>
-      <strong>⚠️ Informações Importantes:</strong> Trabalhamos exclusivamente sob encomenda. Alguns itens possuem quantidade mínima por sabor.
-    </div>
-  `;
+    // Verifica se cabe o título da seção + pelo menos 1 linha de itens na página atual
+    if (y + 24 > pageBottomLimit) {
+      doc.addPage();
+      drawPageBackgroundAndFrame(doc);
+      y = 18;
+    }
 
-  openStyledPdfDocument(
-    "Cardapio-Completo-Buffet-da-Tania.pdf",
-    sectionsHtml + sweetCakesNote
+    // Faixa de Título da Categoria
+    doc.setFillColor(53, 33, 25); // #352119
+    doc.roundedRect(16, y, 178, 8.5, 2, 2, "F");
+
+    doc.setFont("times", "bold");
+    doc.setFontSize(12.5);
+    doc.setTextColor(255, 253, 249);
+    doc.text(section.category, 20, y + 5.8);
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(8);
+    doc.setTextColor(230, 179, 90); // #E6B35A
+    doc.text(
+      `${section.items.length} ${section.items.length === 1 ? "opção" : "opções"}`,
+      190,
+      y + 5.6,
+      { align: "right" }
+    );
+
+    y += 12;
+
+    // Renderiza os itens em pares (2 colunas lado a lado)
+    for (let i = 0; i < section.items.length; i += 2) {
+      const leftItem = section.items[i];
+      const rightItem = section.items[i + 1];
+
+      const leftDescLines = leftItem.description
+        ? doc.splitTextToSize(leftItem.description, colWidth)
+        : [];
+      const rightDescLines =
+        rightItem && rightItem.description
+          ? doc.splitTextToSize(rightItem.description, colWidth)
+          : [];
+
+      const maxDescLines = Math.max(leftDescLines.length, rightDescLines.length, 1);
+      const rowHeight = 5.5 + maxDescLines * 3.4 + 3.5;
+
+      if (y + rowHeight > pageBottomLimit) {
+        doc.addPage();
+        drawPageBackgroundAndFrame(doc);
+        y = 18;
+      }
+
+      // Desenha item da esquerda
+      drawMenuItemCell(doc, leftItem, section.unitLabel, isUnit, col1X, y, colWidth, leftDescLines);
+
+      // Desenha item da direita (se existir)
+      if (rightItem) {
+        drawMenuItemCell(
+          doc,
+          rightItem,
+          section.unitLabel,
+          isUnit,
+          col2X,
+          y,
+          colWidth,
+          rightDescLines
+        );
+      }
+
+      // Linha tracejada sutil abaixo da dupla
+      doc.setDrawColor(232, 220, 204);
+      doc.setLineWidth(0.2);
+      doc.line(col1X, y + rowHeight - 1.8, col1X + colWidth, y + rowHeight - 1.8);
+      if (rightItem) {
+        doc.line(col2X, y + rowHeight - 1.8, col2X + colWidth, y + rowHeight - 1.8);
+      }
+
+      y += rowHeight;
+    }
+
+    y += 4;
+  }
+
+  // Quadro de Tortas Doces Sob Consulta e Avisos no final
+  if (y + 26 > pageBottomLimit) {
+    doc.addPage();
+    drawPageBackgroundAndFrame(doc);
+    y = 18;
+  }
+
+  doc.setFillColor(255, 248, 235); // #FFF8EB
+  doc.setDrawColor(230, 200, 145); // #E6C891
+  doc.setLineWidth(0.4);
+  doc.roundedRect(16, y, 178, 22, 3, 3, "FD");
+
+  doc.setFont("times", "bold");
+  doc.setFontSize(10.5);
+  doc.setTextColor(53, 33, 25);
+  doc.text("Tortas Doces Sob Encomenda (Mediante Consulta)", 20, y + 6);
+
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(8.2);
+  doc.setTextColor(74, 51, 42);
+  const sweetText = doc.splitTextToSize(
+    "Também preparamos tortas doces artesanais em marshmallow/chantininho ou inteiras tradicionais (brigadeiro, chocolate, doce de leite) com recheios variados sob consulta. Trabalhamos exclusivamente sob encomenda (alguns itens possuem quantidade mínima por sabor).",
+    170
   );
+  doc.text(sweetText, 20, y + 11);
+
+  addFootersToAllPages(doc);
+  doc.save("Cardapio-Buffet-da-Tania.pdf");
+}
+
+function drawMenuItemCell(
+  doc: jsPDF,
+  item: MenuItem,
+  unitLabel: string,
+  isUnit: boolean,
+  x: number,
+  y: number,
+  width: number,
+  descLines: string[]
+) {
+  const priceStr =
+    item.price === 0
+      ? "Sob consulta"
+      : `R$ ${formatBRL(item.price)}/${unitLabel}`;
+  const centoStr =
+    item.price > 0 && isUnit ? ` (Cento: R$ ${formatBRL(item.price * 100)})` : "";
+
+  // Nome do prato
+  doc.setFont("times", "bold");
+  doc.setFontSize(10);
+  doc.setTextColor(53, 33, 25); // #352119
+  doc.text(item.name, x, y + 3.5);
+
+  // Preço alinhado à direita da coluna
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(8.5);
+  doc.setTextColor(194, 89, 63); // #C2593F
+  doc.text(priceStr + centoStr, x + width, y + 3.5, { align: "right" });
+
+  // Descrição
+  if (descLines.length > 0) {
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(7.8);
+    doc.setTextColor(114, 85, 74); // #72554A
+    doc.text(descLines, x, y + 7.5);
+  }
 }
 
 /**
- * Gera o PDF da Lista de Orçamento personalizada do cliente
+ * Gera e faz o download direto do arquivo Orcamento-Buffet-da-Tania.pdf
  */
 export function downloadQuotePdf(cartEntries: PdfCartEntry[], totalValue: number) {
+  const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+  drawPageBackgroundAndFrame(doc);
+  let y = drawMainHeader(doc, "Resumo de Orçamento Personalizado");
+
   const dateStr = new Date().toLocaleDateString("pt-BR");
+  const pageBottomLimit = 270;
 
-  const rowsHtml = cartEntries
-    .map((entry) => {
-      const unitPrice =
-        entry.item.price > 0
-          ? `R$ ${formatBRL(entry.item.price)} / ${entry.unitLabel}`
-          : "Sob consulta";
-      const subtotal =
-        entry.item.price > 0
-          ? `R$ ${formatBRL(entry.item.price * entry.quantity)}`
-          : "Sob consulta";
+  doc.setFont("times", "bold");
+  doc.setFontSize(13);
+  doc.setTextColor(53, 33, 25);
+  doc.text("Itens Selecionados no Orçamento", 16, y + 4);
 
-      return `
-        <tr>
-          <td>
-            <strong style="font-family: 'Fraunces', Georgia, serif; color: #352119;">${entry.item.name}</strong>
-            <div style="font-size: 11px; color: #72554A;">${entry.category}</div>
-          </td>
-          <td><strong>${entry.quantity}</strong> ${entry.unitLabel === "un" ? "unid." : entry.unitLabel}</td>
-          <td>${unitPrice}</td>
-          <td>${subtotal}</td>
-        </tr>
-      `;
-    })
-    .join("");
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(8.5);
+  doc.setTextColor(114, 85, 74);
+  doc.text(`Data: ${dateStr}`, 194, y + 4, { align: "right" });
 
-  const bodyHtml = `
-    <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 14px;">
-      <h2 style="font-family: 'Fraunces', Georgia, serif; font-size: 20px; color: #352119;">
-        Resumo de Orçamento
-      </h2>
-      <span style="font-size: 12px; color: #72554A; font-weight: 600;">
-        Gerado em: ${dateStr}
-      </span>
-    </div>
+  y += 8;
 
-    <table class="quote-table">
-      <thead>
-        <tr>
-          <th>Item / Categoria</th>
-          <th>Qtd.</th>
-          <th>Valor Unit.</th>
-          <th>Subtotal</th>
-        </tr>
-      </thead>
-      <tbody>
-        ${rowsHtml}
-      </tbody>
-    </table>
+  // Cabeçalho da Tabela
+  doc.setFillColor(53, 33, 25); // #352119
+  doc.roundedRect(16, y, 178, 8, 2, 2, "F");
 
-    <div class="total-box">
-      <div>
-        <span class="total-label">Valor Total Estimado</span>
-        <div style="font-size: 11px; color: #72554A;">(Itens com valor tabelado no cardápio)</div>
-      </div>
-      <span class="total-value">R$ ${formatBRL(totalValue)}</span>
-    </div>
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(8.5);
+  doc.setTextColor(255, 253, 249);
+  doc.text("ITEM / CATEGORIA", 20, y + 5.3);
+  doc.text("QTD.", 118, y + 5.3);
+  doc.text("UNITÁRIO", 145, y + 5.3);
+  doc.text("SUBTOTAL", 190, y + 5.3, { align: "right" });
 
-    <div class="note-box">
-      <strong>📌 Próximo passo para confirmar sua encomenda:</strong><br/>
-      Envie este resumo para o WhatsApp da Tânia <strong>(71) 99153-0019</strong> para confirmar a disponibilidade da data do seu evento, quantidades mínimas por sabor e valores de itens sob consulta.
-    </div>
-  `;
+  y += 10;
 
-  openStyledPdfDocument("Orcamento-Buffet-da-Tania.pdf", bodyHtml);
+  cartEntries.forEach((entry, index) => {
+    if (y + 12 > pageBottomLimit) {
+      doc.addPage();
+      drawPageBackgroundAndFrame(doc);
+      y = 18;
+    }
+
+    if (index % 2 === 0) {
+      doc.setFillColor(245, 239, 230); // #F5EFE6
+      doc.roundedRect(16, y - 1, 178, 10.5, 1.5, 1.5, "F");
+    }
+
+    doc.setFont("times", "bold");
+    doc.setFontSize(10);
+    doc.setTextColor(53, 33, 25);
+    doc.text(entry.item.name, 20, y + 3.5);
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(7.5);
+    doc.setTextColor(114, 85, 74);
+    doc.text(entry.category, 20, y + 7.5);
+
+    const unitDesc = entry.unitLabel === "un" ? "unid." : entry.unitLabel;
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(9);
+    doc.setTextColor(74, 51, 42);
+    doc.text(`${entry.quantity} ${unitDesc}`, 118, y + 5.2);
+
+    const unitPriceStr =
+      entry.item.price > 0
+        ? `R$ ${formatBRL(entry.item.price)}/${entry.unitLabel}`
+        : "Sob consulta";
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(8.5);
+    doc.text(unitPriceStr, 145, y + 5.2);
+
+    const subtotalStr =
+      entry.item.price > 0
+        ? `R$ ${formatBRL(entry.item.price * entry.quantity)}`
+        : "Sob consulta";
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(9.5);
+    doc.setTextColor(194, 89, 63); // #C2593F
+    doc.text(subtotalStr, 190, y + 5.2, { align: "right" });
+
+    y += 11.5;
+  });
+
+  y += 4;
+  if (y + 38 > pageBottomLimit) {
+    doc.addPage();
+    drawPageBackgroundAndFrame(doc);
+    y = 18;
+  }
+
+  // Caixa de Valor Total Estimado
+  doc.setFillColor(245, 239, 230); // #F5EFE6
+  doc.setDrawColor(212, 149, 59); // #D4953B
+  doc.setLineWidth(0.6);
+  doc.roundedRect(16, y, 178, 14, 3, 3, "FD");
+
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(9.5);
+  doc.setTextColor(74, 51, 42);
+  doc.text("VALOR TOTAL ESTIMADO (ITENS TABELADOS):", 21, y + 8.5);
+
+  doc.setFont("times", "bold");
+  doc.setFontSize(16);
+  doc.setTextColor(53, 33, 25);
+  doc.text(`R$ ${formatBRL(totalValue)}`, 190, y + 9, { align: "right" });
+
+  y += 19;
+
+  // Caixa de orientações finais
+  doc.setFillColor(255, 248, 235);
+  doc.setDrawColor(230, 200, 145);
+  doc.setLineWidth(0.4);
+  doc.roundedRect(16, y, 178, 16, 2.5, 2.5, "FD");
+
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(8.5);
+  doc.setTextColor(53, 33, 25);
+  doc.text("Próximo passo para confirmar sua encomenda:", 20, y + 5.5);
+
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(8);
+  doc.setTextColor(74, 51, 42);
+  doc.text(
+    "Envie este orçamento para o WhatsApp da Tânia (71) 99153-0019 para confirmar disponibilidade da data e quantidades mínimas.",
+    20,
+    y + 11
+  );
+
+  addFootersToAllPages(doc);
+  doc.save("Orcamento-Buffet-da-Tania.pdf");
 }

@@ -6,7 +6,8 @@ import { CategoryIcon } from "./components/CategoryIcon";
 import { MarginIllustrations } from "./components/MarginIllustrations";
 import { PartyCalculator } from "./components/PartyCalculator";
 import { CartDrawer } from "./components/CartDrawer";
-import { downloadFullMenuPdf, downloadQuotePdf, PdfCartEntry } from "./utils/pdfGenerator";
+import { PdfPreviewModal } from "./components/PdfPreviewModal";
+import { PdfCartEntry } from "./utils/pdfGenerator";
 
 const badgeStyles: Record<string, string> = {
   "Mais Pedido": "bg-brand-primary/15 text-brand-primary border-brand-primary/30",
@@ -38,6 +39,7 @@ export default function Home() {
   const [showCalculator, setShowCalculator] = useState<boolean>(false);
   const [cart, setCart] = useState<Record<string, PdfCartEntry>>({});
   const [isCartOpen, setIsCartOpen] = useState<boolean>(false);
+  const [pdfPreviewMode, setPdfPreviewMode] = useState<"menu" | "quote" | null>(null);
   const [darkMode, setDarkMode] = useState<boolean>(false);
 
   const whatsappNumber = "5571991530019";
@@ -308,7 +310,7 @@ export default function Home() {
             </a>
             <button
               type="button"
-              onClick={downloadFullMenuPdf}
+              onClick={() => setPdfPreviewMode("menu")}
               className="hover:text-brand-primary transition-colors cursor-pointer"
             >
               Cardápio em PDF
@@ -422,13 +424,13 @@ export default function Home() {
                     </button>
                     <button
                       type="button"
-                      onClick={downloadFullMenuPdf}
+                      onClick={() => setPdfPreviewMode("menu")}
                       className="inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-2xl sm:rounded-full bg-brand-card hover:bg-brand-bg-alt text-brand-heading font-bold text-sm border border-brand-border transition-all cursor-pointer"
                     >
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4 text-brand-primary shrink-0">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                       </svg>
-                      <span>Baixar Cardápio PDF</span>
+                      <span>Cardápio em PDF</span>
                     </button>
                   </div>
 
@@ -1379,7 +1381,7 @@ export default function Home() {
           <div className="flex flex-wrap items-center justify-center gap-4">
             <button
               type="button"
-              onClick={downloadFullMenuPdf}
+              onClick={() => setPdfPreviewMode("menu")}
               className="font-bold text-brand-heading hover:text-brand-primary underline cursor-pointer"
             >
               Baixar Cardápio em PDF
@@ -1412,6 +1414,15 @@ export default function Home() {
         onDelete={handleDeleteFromCart}
         onClear={clearCart}
         whatsappLink={getCartWhatsAppLink()}
+        onOpenQuotePdfPreview={() => setPdfPreviewMode("quote")}
+      />
+
+      {/* Modal de Pré-visualização e Download Direto do PDF (Sem abrir tela de impressão) */}
+      <PdfPreviewModal
+        mode={pdfPreviewMode}
+        onClose={() => setPdfPreviewMode(null)}
+        cartEntries={cartEntries}
+        cartTotalValue={cartTotalValue}
       />
 
       {/* 6. BARRA INFERIOR FIXA */}
@@ -1436,9 +1447,9 @@ export default function Home() {
           <div className="flex items-center gap-1.5 shrink-0">
             <button
               type="button"
-              onClick={() => downloadQuotePdf(cartEntries, cartTotalValue)}
+              onClick={() => setPdfPreviewMode("quote")}
               className="bg-white/12 hover:bg-white/20 text-[#FFFDF9] py-2.5 px-3 rounded-xl sm:rounded-full font-bold text-xs flex items-center gap-1.5 transition-all cursor-pointer"
-              title="Baixar orçamento em PDF"
+              title="Visualizar e baixar orçamento em PDF"
             >
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4 text-[#E6B35A]">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />

@@ -1,6 +1,6 @@
 import { MenuItem } from "../data/menu";
 import { CategoryIcon } from "./CategoryIcon";
-import { downloadQuotePdf, PdfCartEntry } from "../utils/pdfGenerator";
+import { PdfCartEntry } from "../utils/pdfGenerator";
 
 type CartDrawerProps = {
   isOpen: boolean;
@@ -18,6 +18,7 @@ type CartDrawerProps = {
   onDelete: (itemId: string) => void;
   onClear: () => void;
   whatsappLink: string;
+  onOpenQuotePdfPreview: () => void;
 };
 
 const formatBRL = (val: number) =>
@@ -33,6 +34,7 @@ export function CartDrawer({
   onDelete,
   onClear,
   whatsappLink,
+  onOpenQuotePdfPreview,
 }: CartDrawerProps) {
   if (!isOpen) return null;
 
@@ -223,13 +225,13 @@ export function CartDrawer({
           {cartEntries.length > 0 && (
             <button
               type="button"
-              onClick={() => downloadQuotePdf(cartEntries, cartTotalValue)}
+              onClick={onOpenQuotePdfPreview}
               className="w-full py-2.5 px-4 rounded-2xl sm:rounded-full bg-brand-card hover:bg-brand-bg-alt text-brand-heading font-bold text-xs sm:text-sm border border-brand-border flex items-center justify-center gap-2 transition-all cursor-pointer"
             >
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4 text-brand-primary">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
-              <span>Baixar Orçamento em PDF</span>
+              <span>Visualizar e Baixar Orçamento em PDF</span>
             </button>
           )}
         </div>
@@ -237,3 +239,4 @@ export function CartDrawer({
     </div>
   );
 }
+
