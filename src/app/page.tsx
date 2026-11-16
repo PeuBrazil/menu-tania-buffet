@@ -2,6 +2,8 @@
 
 import { useState, useMemo, useEffect } from "react";
 import { menuData, MenuItem } from "./data/menu";
+import { CategoryIcon } from "./components/CategoryIcon";
+import { MarginIllustrations } from "./components/MarginIllustrations";
 
 type CartItem = {
   item: MenuItem;
@@ -24,295 +26,11 @@ const badgeStyles: Record<string, string> = {
   "Clássica 30cm": "bg-brand-muted/15 text-brand-heading border-brand-border",
 };
 
-function CategoryIcon({ category, className = "w-5 h-5" }: { category: string; className?: string }) {
-  switch (category) {
-    case "Salgados Fritos":
-      return (
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className={className}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M12 3c-3.5 4-7 7.5-7 12a7 7 0 0014 0c0-4.5-3.5-8-7-12z" />
-          <path strokeLinecap="round" strokeLinejoin="round" d="M9.5 15.5a3.5 3.5 0 005 0" />
-        </svg>
-      );
-    case "Salgados de Forno":
-      return (
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className={className}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M3 15h18l-2 5H5l-2-5z" />
-          <path strokeLinecap="round" strokeLinejoin="round" d="M5 15c0-4.5 3.1-8 7-8s7 3.5 7 8" />
-          <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v3M8 5.5l1 2M16 5.5l-1 2" />
-        </svg>
-      );
-    case "Doces":
-      return (
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className={className}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M5 14l2 6h10l2-6" />
-          <path strokeLinecap="round" strokeLinejoin="round" d="M4 14c0-2.5 2-4.5 4.5-4.5.4 0 .8.05 1.2.15A4.5 4.5 0 0114.2 9.65c.4-.1.8-.15 1.3-.15 2.5 0 4.5 2 4.5 4.5H4z" />
-          <circle cx="12" cy="5.5" r="1.8" />
-        </svg>
-      );
-    case "Tortas Doces":
-      return (
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className={className}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M4 15h16v5a1 1 0 01-1 1H5a1 1 0 01-1-1v-5z" />
-          <path strokeLinecap="round" strokeLinejoin="round" d="M6 15v-4a2 2 0 012-2h8a2 2 0 012 2v4" />
-          <path strokeLinecap="round" strokeLinejoin="round" d="M4 15c1.5 1.5 3.5 1.5 5 0 1.5 1.5 3.5 1.5 5 0 1.5 1.5 3.5 1.5 6 0" />
-          <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v3M12 4a1 1 0 100 2 1 1 0 000-2z" />
-        </svg>
-      );
-    case "Tortas Salgadas":
-      return (
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className={className}>
-          <ellipse cx="12" cy="10" rx="9" ry="4.5" />
-          <path strokeLinecap="round" strokeLinejoin="round" d="M3 10v5c0 2.5 4 4.5 9 4.5s9-2 9-4.5v-5" />
-          <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 8.5l9 3M16.5 8.5l-9 3" />
-        </svg>
-      );
-    case "Vinagretes":
-      return (
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className={className}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M4 11h16a8 8 0 01-16 0z" />
-          <path strokeLinecap="round" strokeLinejoin="round" d="M8 20h8M12 19v1" />
-          <path strokeLinecap="round" strokeLinejoin="round" d="M7 11c.5-2.5 2.5-4 5-4s4.5 1.5 5 4" />
-        </svg>
-      );
-    default:
-      return (
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className={className}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-        </svg>
-      );
-  }
-}
-
-type IllustrationKind =
-  | "coxinha"
-  | "brigadeiro"
-  | "empada"
-  | "bolo"
-  | "torta30"
-  | "trufa"
-  | "fatia"
-  | "pastel"
-  | "barquete"
-  | "fouet"
-  | "morango"
-  | "trouxinha";
-
-function CulinarySvg({ kind, size }: { kind: IllustrationKind; size: number }) {
-  switch (kind) {
-    case "coxinha":
-      return (
-        <svg width={size} height={size} viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="1.8">
-          <path d="M32 8C23 18 14 28 14 40a18 18 0 0036 0c0-12-9-22-18-32z" strokeLinecap="round" strokeLinejoin="round" />
-          <path d="M22 42c2 5 7 8 12 8" strokeLinecap="round" />
-          <circle cx="28" cy="30" r="1.5" fill="currentColor" />
-          <circle cx="36" cy="34" r="1.5" fill="currentColor" />
-          <circle cx="32" cy="24" r="1.5" fill="currentColor" />
-        </svg>
-      );
-    case "brigadeiro":
-      return (
-        <svg width={size} height={size} viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="1.8">
-          <path d="M14 36l6 18h24l6-18" strokeLinecap="round" strokeLinejoin="round" />
-          <path d="M12 36c3-3 6-3 9 0 3-3 6-3 9 0 3-3 6-3 9 0 3-3 6-3 9 0 2-2 4-2 4 0" strokeLinecap="round" />
-          <path d="M16 34c0-10 7-17 16-17s16 7 16 17" strokeLinecap="round" />
-          <path d="M25 24l3 2M34 22l2 3M28 29l3 1M37 28l2 2" strokeLinecap="round" />
-          <circle cx="32" cy="14" r="3" />
-        </svg>
-      );
-    case "empada":
-      return (
-        <svg width={size} height={size} viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="1.8">
-          <path d="M10 34h44l-5 16H15l-5-16z" strokeLinecap="round" strokeLinejoin="round" />
-          <path d="M12 34c0-8 9-14 20-14s20 6 20 14" strokeLinecap="round" />
-          <path d="M10 34c3 3 7 3 11 0 3 3 7 3 11 0 3 3 7 3 11 0 3 3 7 3 11 0" strokeLinecap="round" />
-          <path d="M26 26l12 4M38 26l-12 4" strokeLinecap="round" />
-        </svg>
-      );
-    case "bolo":
-      return (
-        <svg width={size} height={size} viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="1.8">
-          <rect x="12" y="34" width="40" height="18" rx="3" />
-          <path d="M18 34V24a3 3 0 013-3h22a3 3 0 013 3v10" />
-          <path d="M12 40c4 3 8 3 13 0 4 3 9 3 14 0 4 3 9 3 13 0" strokeLinecap="round" />
-          <path d="M18 27c3 2 6 2 9 0 3 2 6 2 9 0 3 2 6 2 8 0" strokeLinecap="round" />
-          <circle cx="24" cy="19" r="2" />
-          <circle cx="32" cy="18" r="2.5" />
-          <circle cx="40" cy="19" r="2" />
-          <path d="M8 52h48" strokeLinecap="round" />
-        </svg>
-      );
-    case "torta30":
-      return (
-        <svg width={size} height={size} viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="1.8">
-          <ellipse cx="32" cy="28" rx="22" ry="10" />
-          <path d="M10 28v10c0 5.5 9.8 10 22 10s22-4.5 22-10V28" />
-          <path d="M18 24l28 8M46 24l-28 8M24 21l16 14M40 21L24 35" strokeLinecap="round" />
-        </svg>
-      );
-    case "trufa":
-      return (
-        <svg width={size} height={size} viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="1.8">
-          <path d="M16 38c0-9 7-16 16-16s16 7 16 16H16z" strokeLinecap="round" strokeLinejoin="round" />
-          <path d="M12 38h40l-4 10H16l-4-10z" strokeLinecap="round" strokeLinejoin="round" />
-          <path d="M22 28c3-2 7-2 10 1 3-3 7-3 10-1" strokeLinecap="round" />
-        </svg>
-      );
-    case "fatia":
-      return (
-        <svg width={size} height={size} viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="1.8">
-          <path d="M12 36L46 18c6 4 8 10 8 18H12z" strokeLinecap="round" strokeLinejoin="round" />
-          <path d="M12 36v14h42V36" strokeLinecap="round" strokeLinejoin="round" />
-          <path d="M12 43h42" strokeLinecap="round" strokeDasharray="3 3" />
-          <circle cx="38" cy="20" r="3.5" />
-          <path d="M39 16c2-3 5-4 7-3" strokeLinecap="round" />
-        </svg>
-      );
-    case "pastel":
-      return (
-        <svg width={size} height={size} viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="1.8">
-          <path d="M12 42c0-13 9-24 20-24s20 11 20 24H12z" strokeLinecap="round" strokeLinejoin="round" />
-          <path d="M8 42h48" strokeLinecap="round" />
-          <path d="M15 39v-3M20 33l-2-2M26 28l-1-3M32 26v-3M38 28l1-3M44 33l2-2M49 39v-3" strokeLinecap="round" />
-        </svg>
-      );
-    case "barquete":
-      return (
-        <svg width={size} height={size} viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="1.8">
-          <path d="M8 32c6 12 15 16 24 16s18-4 24-16H8z" strokeLinecap="round" strokeLinejoin="round" />
-          <path d="M14 32c4-6 10-9 18-9s14 3 18 9" strokeLinecap="round" />
-          <path d="M24 28c2-2 5-2 8 0 3-2 6-2 8 0" strokeLinecap="round" />
-        </svg>
-      );
-    case "fouet":
-      return (
-        <svg width={size} height={size} viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="1.8">
-          <path d="M14 50l16-16" strokeLinecap="round" strokeWidth="2.4" />
-          <ellipse cx="40" cy="24" rx="9" ry="15" transform="rotate(45 40 24)" />
-          <ellipse cx="40" cy="24" rx="4.5" ry="15" transform="rotate(45 40 24)" />
-          <path d="M18 20v4M16 22h4M48 44v4M46 46h4" strokeLinecap="round" />
-        </svg>
-      );
-    case "morango":
-      return (
-        <svg width={size} height={size} viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="1.8">
-          <path d="M32 52C20 44 16 32 20 23c3-6 9-6 12-3 3-3 9-3 12 3 4 9 0 21-12 29z" strokeLinecap="round" strokeLinejoin="round" />
-          <path d="M24 17c3 2 6 3 8 3s5-1 8-3M32 13v7" strokeLinecap="round" />
-          <path d="M19 32c4 3 8 3 13 0 4 3 9 3 13 0" strokeLinecap="round" />
-        </svg>
-      );
-    case "trouxinha":
-      return (
-        <svg width={size} height={size} viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth="1.8">
-          <path d="M20 30c-4 5-5 14 0 19 4 4 20 4 24 0 5-5 4-14 0-19" strokeLinecap="round" strokeLinejoin="round" />
-          <path d="M20 30c4 2 20 2 24 0" strokeLinecap="round" />
-          <path d="M26 30l-4-12 7 4 3-5 3 5 7-4-4 12" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
-      );
-  }
-}
-
-const leftMarginItems: Array<{
-  top: string;
-  left: string;
-  size: number;
-  rotate: number;
-  kind: IllustrationKind;
-  color: string;
-}> = [
-  { top: "140px", left: "18px", size: 78, rotate: -16, kind: "coxinha", color: "text-brand-heading" },
-  { top: "380px", left: "64px", size: 54, rotate: 18, kind: "brigadeiro", color: "text-brand-primary" },
-  { top: "640px", left: "12px", size: 68, rotate: -10, kind: "empada", color: "text-brand-gold" },
-  { top: "900px", left: "56px", size: 84, rotate: 14, kind: "fatia", color: "text-brand-heading" },
-  { top: "1180px", left: "16px", size: 58, rotate: -22, kind: "pastel", color: "text-brand-primary" },
-  { top: "1440px", left: "68px", size: 72, rotate: 12, kind: "trufa", color: "text-brand-gold" },
-  { top: "1720px", left: "14px", size: 90, rotate: -14, kind: "bolo", color: "text-brand-primary" },
-  { top: "2000px", left: "60px", size: 52, rotate: 24, kind: "barquete", color: "text-brand-heading" },
-  { top: "2280px", left: "20px", size: 74, rotate: -18, kind: "torta30", color: "text-brand-gold" },
-  { top: "2560px", left: "58px", size: 62, rotate: 15, kind: "morango", color: "text-brand-primary" },
-  { top: "2840px", left: "12px", size: 80, rotate: -12, kind: "trouxinha", color: "text-brand-heading" },
-  { top: "3120px", left: "64px", size: 56, rotate: 20, kind: "fouet", color: "text-brand-gold" },
-  { top: "3400px", left: "18px", size: 70, rotate: -20, kind: "brigadeiro", color: "text-brand-primary" },
-  { top: "3680px", left: "54px", size: 82, rotate: 10, kind: "coxinha", color: "text-brand-heading" },
-  { top: "3960px", left: "14px", size: 60, rotate: -15, kind: "fatia", color: "text-brand-gold" },
-  { top: "4240px", left: "62px", size: 74, rotate: 18, kind: "empada", color: "text-brand-primary" },
-  { top: "4520px", left: "16px", size: 66, rotate: -12, kind: "pastel", color: "text-brand-heading" },
-  { top: "4800px", left: "52px", size: 76, rotate: 14, kind: "bolo", color: "text-brand-gold" },
-];
-
-const rightMarginItems: Array<{
-  top: string;
-  right: string;
-  size: number;
-  rotate: number;
-  kind: IllustrationKind;
-  color: string;
-}> = [
-  { top: "180px", right: "20px", size: 82, rotate: 15, kind: "bolo", color: "text-brand-primary" },
-  { top: "440px", right: "62px", size: 58, rotate: -18, kind: "pastel", color: "text-brand-heading" },
-  { top: "700px", right: "14px", size: 72, rotate: 12, kind: "trufa", color: "text-brand-gold" },
-  { top: "960px", right: "58px", size: 64, rotate: -14, kind: "coxinha", color: "text-brand-primary" },
-  { top: "1240px", right: "16px", size: 86, rotate: 18, kind: "torta30", color: "text-brand-heading" },
-  { top: "1520px", right: "64px", size: 54, rotate: -22, kind: "morango", color: "text-brand-gold" },
-  { top: "1800px", right: "18px", size: 76, rotate: 10, kind: "brigadeiro", color: "text-brand-primary" },
-  { top: "2080px", right: "56px", size: 66, rotate: -16, kind: "empada", color: "text-brand-heading" },
-  { top: "2360px", right: "12px", size: 80, rotate: 20, kind: "fatia", color: "text-brand-gold" },
-  { top: "2640px", right: "60px", size: 56, rotate: -12, kind: "fouet", color: "text-brand-primary" },
-  { top: "2920px", right: "16px", size: 74, rotate: 14, kind: "barquete", color: "text-brand-heading" },
-  { top: "3200px", right: "58px", size: 68, rotate: -19, kind: "trouxinha", color: "text-brand-gold" },
-  { top: "3480px", right: "14px", size: 84, rotate: 16, kind: "bolo", color: "text-brand-primary" },
-  { top: "3760px", right: "62px", size: 58, rotate: -15, kind: "trufa", color: "text-brand-heading" },
-  { top: "4040px", right: "18px", size: 72, rotate: 12, kind: "coxinha", color: "text-brand-gold" },
-  { top: "4320px", right: "54px", size: 64, rotate: -20, kind: "brigadeiro", color: "text-brand-primary" },
-  { top: "4600px", right: "16px", size: 78, rotate: 15, kind: "torta30", color: "text-brand-heading" },
-  { top: "4880px", right: "58px", size: 62, rotate: -14, kind: "morango", color: "text-brand-gold" },
-];
-
-/* Ilustrações gastronômicas distribuídas ao longo de toda a página (visíveis apenas em telas amplas onde há margem lateral) */
-function MarginIllustrations() {
-  return (
-    <div
-      aria-hidden="true"
-      style={{ overflowAnchor: "none" }}
-      className="pointer-events-none absolute inset-0 z-0 overflow-hidden hidden xl:block"
-    >
-      {/* Coluna Esquerda */}
-      {leftMarginItems.map((item, idx) => (
-        <div
-          key={`left-${idx}`}
-          style={{
-            top: item.top,
-            left: item.left,
-            transform: `rotate(${item.rotate}deg)`,
-          }}
-          className={`absolute ${item.color} opacity-[0.13] dark:opacity-[0.17] transition-opacity`}
-        >
-          <CulinarySvg kind={item.kind} size={item.size} />
-        </div>
-      ))}
-
-      {/* Coluna Direita */}
-      {rightMarginItems.map((item, idx) => (
-        <div
-          key={`right-${idx}`}
-          style={{
-            top: item.top,
-            right: item.right,
-            transform: `rotate(${item.rotate}deg)`,
-          }}
-          className={`absolute ${item.color} opacity-[0.13] dark:opacity-[0.17] transition-opacity`}
-        >
-          <CulinarySvg kind={item.kind} size={item.size} />
-        </div>
-      ))}
-    </div>
-  );
-}
-
 const customSweetCakeItem: MenuItem = {
   id: "torta-doce-personalizada",
   name: "Torta Doce Sob Encomenda (Sabores a combinar)",
   description:
-    "Torta doce artesanal personalizada (em chantilly/chantininho ou cobertura tradicional) com recheios e sabores definidos mediante consulta.",
+    "Torta doce artesanal personalizada (em chantininho/marshmallow ou cobertura tradicional) com recheios e sabores definidos mediante consulta.",
   price: 0,
 };
 
@@ -329,7 +47,6 @@ export default function Home() {
 
   const whatsappNumber = "5571991530019";
 
-  // Carrega preferência de tema escuro
   useEffect(() => {
     const saved = localStorage.getItem("buffet-tania-theme");
     if (saved === "dark") {
@@ -355,14 +72,12 @@ export default function Home() {
   const formatBRL = (val: number) =>
     val.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
-  // Normaliza texto removendo acentos para busca inteligente ("limao" encontra "Limão", etc.)
   const normalizeText = (text: string) =>
     text
       .toLowerCase()
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "");
 
-  // Mapa de sinônimos gastronômicos para buscas por sabor
   const flavorSynonyms: Record<string, string[]> = {
     chocolate: [
       "chocolate",
@@ -404,7 +119,6 @@ export default function Home() {
     [activeTab]
   );
 
-  // Subcategorias disponíveis na aba atual
   const subcategories = useMemo(() => {
     if (!activeSection) return ["Todos"];
     const subs = Array.from(
@@ -413,7 +127,6 @@ export default function Home() {
     return subs.length > 0 ? ["Todos", ...subs] : ["Todos"];
   }, [activeSection]);
 
-  // Busca global ou filtrada pela categoria
   const displayedSections = useMemo(() => {
     const rawQuery = searchQuery.trim();
     const normQuery = normalizeText(rawQuery);
@@ -449,7 +162,6 @@ export default function Home() {
     []
   );
 
-  // Funções da Lista de Orçamento (+10, +25, +50 ou +1 para tortas/vinagretes)
   const handleAddToCart = (
     item: MenuItem,
     category: string,
@@ -511,14 +223,7 @@ export default function Home() {
 
   const getSweetCakeWhatsAppLink = () => {
     const text = encodeURIComponent(
-      "Olá, Tânia! Vi no site que você também faz Tortas Doces sob encomenda (em chantilly/chantininho ou tradicionais) e gostaria de consultar as opções de sabores, recheios e valores."
-    );
-    return `https://wa.me/${whatsappNumber}?text=${text}`;
-  };
-
-  const getItemWhatsAppLink = (item: MenuItem, category: string) => {
-    const text = encodeURIComponent(
-      `Olá, Tânia! Vi o item *${item.name}* (${category}) no cardápio online e gostaria de consultar disponibilidade e valores para encomenda.`
+      "Olá, Tânia! Vi no site que você também faz Tortas Doces sob encomenda (em marshmallow/chantininho ou tradicionais) e gostaria de consultar as opções de sabores, recheios e valores."
     );
     return `https://wa.me/${whatsappNumber}?text=${text}`;
   };
@@ -613,7 +318,6 @@ export default function Home() {
           </nav>
 
           <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
-            {/* Botão de Modo Escuro / Claro */}
             <button
               type="button"
               onClick={toggleDarkMode}
@@ -639,7 +343,6 @@ export default function Home() {
               )}
             </button>
 
-            {/* Botão Minha Lista */}
             <button
               type="button"
               onClick={() => setIsCartOpen(true)}
@@ -677,7 +380,7 @@ export default function Home() {
       </header>
 
       <main className="flex-1 pb-28 relative z-10">
-        {/* 1. HERO SECTION (Mais enxuto no celular para chegar rápido ao cardápio) */}
+        {/* 1. HERO SECTION */}
         <section className="relative overflow-hidden pt-5 pb-8 sm:pt-12 sm:pb-16 border-b border-brand-border/70">
           <div className="max-w-6xl mx-auto px-3.5 sm:px-6 lg:px-8">
             <div className="bg-brand-card border border-brand-border rounded-3xl sm:rounded-[2rem] p-5 sm:p-10 lg:p-14 shadow-[0_20px_60px_-20px_rgba(74,51,42,0.14)] relative overflow-hidden">
@@ -685,7 +388,6 @@ export default function Home() {
               <div className="hidden lg:block absolute -bottom-24 -left-24 w-72 h-72 rounded-full bg-brand-primary/10 blur-2xl pointer-events-none" />
 
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 items-center relative z-10">
-                {/* Coluna Principal de Texto */}
                 <div className="lg:col-span-7 text-center lg:text-left">
                   <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-bg-alt border border-brand-border text-brand-heading text-[11px] sm:text-xs font-bold uppercase tracking-widest mb-3.5 sm:mb-5">
                     <span className="text-brand-primary">★</span> Receitas de Família • Feito à Mão
@@ -702,7 +404,6 @@ export default function Home() {
                     Salgados, doces e tortas feitos à mão, com aquele capricho de receita de família para levar o melhor sabor à sua festa.
                   </p>
 
-                  {/* Botões de Ação */}
                   <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center lg:justify-start gap-2.5 sm:gap-3.5 mb-5 sm:mb-7">
                     <a
                       href="#cardapio"
@@ -725,7 +426,6 @@ export default function Home() {
                     </button>
                   </div>
 
-                  {/* Aviso de Encomenda e Quantidade Mínima */}
                   <div
                     style={{
                       backgroundColor: "var(--brand-warning-bg)",
@@ -740,7 +440,6 @@ export default function Home() {
                   </div>
                 </div>
 
-                {/* Coluna Direita: Vitrine de Destaques (Visível no Desktop para não alongar o topo no celular) */}
                 <div className="hidden lg:grid lg:col-span-5 grid-cols-1 gap-3">
                   <button
                     type="button"
@@ -820,7 +519,7 @@ export default function Home() {
                         Tortas Doces Personalizadas
                       </h3>
                       <p className="text-xs text-brand-muted mt-0.5 line-clamp-2">
-                        Em chantilly/chantininho ou inteiras de brigadeiro, doce de leite e chocolate, sob consulta.
+                        Em marshmallow/chantininho ou inteiras de brigadeiro, doce de leite e chocolate, sob consulta.
                       </p>
                     </div>
                   </a>
@@ -856,7 +555,6 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Calculadora / Guia Rápido para Festas (Expansível) */}
               {showCalculator && (
                 <div
                   id="calculadora"
@@ -985,7 +683,6 @@ export default function Home() {
 
         {/* 2. SEÇÃO DO CARDÁPIO */}
         <section id="cardapio" className="max-w-6xl mx-auto px-3.5 sm:px-6 lg:px-8 pt-8 sm:pt-14 pb-12">
-          {/* Título do Cardápio */}
           <div className="text-center max-w-2xl mx-auto mb-6 sm:mb-10">
             <span className="text-[11px] sm:text-xs font-bold uppercase tracking-[0.2em] text-brand-primary block mb-1.5">
               Nosso Menu Completo
@@ -994,12 +691,11 @@ export default function Home() {
               Cardápio de Encomendas
             </h2>
             <p className="text-xs sm:text-base text-brand-muted mt-1.5">
-              Toque em <strong className="text-brand-heading">+10, +25 ou +50</strong> nos seus itens preferidos para montar sua lista de orçamento.
+              Toque em <strong className="text-brand-heading">+10, +50 ou +100</strong> nos seus itens preferidos para montar sua lista de orçamento.
             </p>
           </div>
 
-          {/* SELETOR DE CATEGORIAS MOBILE (Swipe Horizontal) + DESKTOP (Grade 5 colunas) */}
-          {/* Versão Mobile: Barra horizontal deslizante super prática */}
+          {/* Seletor de Categorias Mobile (Swipe Horizontal) */}
           <div className="flex sm:hidden items-center gap-2 overflow-x-auto no-scrollbar pb-2 mb-4 -mx-3.5 px-3.5">
             {menuData.map((section) => {
               const isActive = activeTab === section.category && searchQuery.trim() === "";
@@ -1014,10 +710,7 @@ export default function Home() {
                       : "bg-brand-card text-brand-heading border-brand-border"
                   }`}
                 >
-                  <CategoryIcon
-                    category={section.category}
-                    className="w-4 h-4 text-brand-primary"
-                  />
+                  <CategoryIcon category={section.category} className="w-4 h-4 text-brand-primary" />
                   <span>{section.category}</span>
                   <span
                     className={`text-[10px] px-1.5 py-0.5 rounded-full font-extrabold ${
@@ -1031,7 +724,7 @@ export default function Home() {
             })}
           </div>
 
-          {/* Versão Tablet/Desktop: Cartões de Categoria */}
+          {/* Seletor de Categorias Tablet/Desktop */}
           <div className="hidden sm:grid sm:grid-cols-3 lg:grid-cols-5 gap-3 mb-8">
             {menuData.map((section) => {
               const isActive = activeTab === section.category && searchQuery.trim() === "";
@@ -1058,9 +751,7 @@ export default function Home() {
                     </div>
                     <span
                       className={`text-xs font-bold px-2.5 py-0.5 rounded-full ${
-                        isActive
-                          ? "bg-brand-primary text-white"
-                          : "bg-brand-bg text-brand-muted"
+                        isActive ? "bg-brand-primary text-white" : "bg-brand-bg text-brand-muted"
                       }`}
                     >
                       {section.items.length} itens
@@ -1079,7 +770,6 @@ export default function Home() {
           {/* Barra de Busca, Filtros Rápidos e Alternador de Visualização */}
           <div className="bg-brand-card border border-brand-border rounded-2xl p-3.5 sm:p-5 mb-6 sm:mb-8 shadow-xs">
             <div className="flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between">
-              {/* Campo de Busca */}
               <div className="relative flex-1">
                 <svg
                   viewBox="0 0 24 24"
@@ -1109,7 +799,6 @@ export default function Home() {
                 )}
               </div>
 
-              {/* Alternador de Visualização (Cartões vs Lista de Bistrô) */}
               <div className="flex items-center justify-between sm:justify-end gap-2 shrink-0">
                 <span className="text-xs font-semibold text-brand-muted">Modo de visão:</span>
                 <div className="inline-flex rounded-xl bg-brand-bg p-1 border border-brand-border">
@@ -1148,7 +837,6 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Filtros Rápidos por Sabor (Deslizante em 1 linha no celular, wrap no desktop) */}
             <div className="mt-3 pt-3 border-t border-brand-border/70">
               <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar sm:flex-wrap pb-0.5">
                 <span className="text-[11px] sm:text-xs font-bold text-brand-muted mr-1 shrink-0">
@@ -1178,7 +866,6 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Pílulas de Subcategoria (Deslizante em 1 linha no celular) */}
             {!searchQuery.trim() && subcategories.length > 1 && (
               <div className="mt-2.5 pt-2.5 border-t border-brand-border/70">
                 <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar sm:flex-wrap pb-0.5">
@@ -1231,7 +918,6 @@ export default function Home() {
             <div className="space-y-10 sm:space-y-12">
               {displayedSections.map((section) => (
                 <div key={section.category}>
-                  {/* Cabeçalho da Categoria Atual */}
                   <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2 pb-3.5 mb-5 border-b-2 border-brand-border">
                     <div>
                       <div className="flex items-center gap-2.5 flex-wrap">
@@ -1246,7 +932,6 @@ export default function Home() {
                     </div>
                   </div>
 
-                  {/* MODO 1: CARTÕES GASTRONÔMICOS (GRID COM BOTÕES AMPLOS PARA TOQUE) */}
                   {viewMode === "grid" ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
                       {section.items.map((item) => {
@@ -1264,7 +949,6 @@ export default function Home() {
                             }`}
                           >
                             <div>
-                              {/* Topo do Cartão: Subcategoria & Badge */}
                               <div className="flex items-center justify-between gap-2 mb-1.5">
                                 <span className="text-[11px] font-bold uppercase tracking-wider text-brand-muted">
                                   {item.subcategory || section.category}
@@ -1281,12 +965,10 @@ export default function Home() {
                                 )}
                               </div>
 
-                              {/* Nome do Item */}
                               <h4 className="font-serif font-bold text-lg sm:text-xl text-brand-heading group-hover:text-brand-primary transition-colors leading-snug">
                                 {item.name}
                               </h4>
 
-                              {/* Descrição */}
                               {item.description && (
                                 <p className="text-xs sm:text-sm text-brand-muted mt-1.5 leading-relaxed">
                                   {item.description}
@@ -1294,9 +976,7 @@ export default function Home() {
                               )}
                             </div>
 
-                            {/* Rodapé do Cartão: Preço & Controles Grandes para Celular */}
                             <div className="mt-4 pt-3.5 border-t border-brand-border/70 flex flex-col gap-3">
-                              {/* Linha de Preço */}
                               <div className="flex items-baseline justify-between gap-2 flex-wrap">
                                 {isZeroPrice ? (
                                   <div>
@@ -1327,7 +1007,6 @@ export default function Home() {
                                 )}
                               </div>
 
-                              {/* BOTÕES DE ADIÇÃO (LARGOS E CONFORTÁVEIS PARA TOQUE NO CELULAR) */}
                               {isUnitItem ? (
                                 inCart ? (
                                   <div className="bg-brand-bg rounded-xl p-2 border border-brand-primary/30 space-y-2">
@@ -1374,12 +1053,12 @@ export default function Home() {
                                             section.category,
                                             section.unitLabel,
                                             section.stepQty,
-                                            25
+                                            50
                                           )
                                         }
                                         className="py-2 rounded-lg bg-brand-selected text-brand-selected-text hover:bg-brand-primary hover:text-white font-extrabold text-xs active:scale-95 transition-all cursor-pointer"
                                       >
-                                        +25
+                                        +50
                                       </button>
                                       <button
                                         type="button"
@@ -1389,18 +1068,18 @@ export default function Home() {
                                             section.category,
                                             section.unitLabel,
                                             section.stepQty,
-                                            50
+                                            100
                                           )
                                         }
                                         className="py-2 rounded-lg bg-brand-selected text-brand-selected-text hover:bg-brand-primary hover:text-white font-extrabold text-xs active:scale-95 transition-all cursor-pointer"
                                       >
-                                        +50
+                                        +100
                                       </button>
                                     </div>
                                   </div>
                                 ) : (
                                   <div className="grid grid-cols-3 gap-2">
-                                    {[10, 25, 50].map((qty) => (
+                                    {[10, 50, 100].map((qty) => (
                                       <button
                                         key={qty}
                                         type="button"
@@ -1421,7 +1100,6 @@ export default function Home() {
                                   </div>
                                 )
                               ) : (
-                                /* Controles para Tortas Salgadas e Vinagretes (1 em 1) */
                                 <div className="pt-0.5">
                                   {inCart ? (
                                     <div className="flex items-center justify-between bg-brand-bg rounded-xl p-1.5 border border-brand-primary/30">
@@ -1476,7 +1154,6 @@ export default function Home() {
                       })}
                     </div>
                   ) : (
-                    /* MODO 2: LISTA COMPACTA (FÁCIL DE ESCANEAR E CLICAR NO CELULAR) */
                     <div className="bg-brand-card border border-brand-border rounded-2xl sm:rounded-3xl p-4 sm:p-8 shadow-xs">
                       <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-10 gap-y-5">
                         {section.items.map((item) => {
@@ -1560,12 +1237,12 @@ export default function Home() {
                                             section.category,
                                             section.unitLabel,
                                             section.stepQty,
-                                            25
+                                            50
                                           )
                                         }
                                         className="px-2.5 py-1 rounded-lg bg-brand-bg hover:bg-brand-primary text-brand-heading hover:text-white text-xs font-bold border border-brand-border cursor-pointer"
                                       >
-                                        +25
+                                        +50
                                       </button>
                                       <button
                                         type="button"
@@ -1575,12 +1252,12 @@ export default function Home() {
                                             section.category,
                                             section.unitLabel,
                                             section.stepQty,
-                                            50
+                                            100
                                           )
                                         }
                                         className="px-2.5 py-1 rounded-lg bg-brand-bg hover:bg-brand-primary text-brand-heading hover:text-white text-xs font-bold border border-brand-border cursor-pointer"
                                       >
-                                        +50
+                                        +100
                                       </button>
                                     </>
                                   ) : (
@@ -1631,7 +1308,7 @@ export default function Home() {
                 </p>
                 <p className="text-xs sm:text-base text-brand-muted leading-relaxed mb-5 sm:mb-7">
                   Trabalhamos tanto com tortas confeitadas em{" "}
-                  <strong className="text-brand-heading">chantilly / chantininho</strong> quanto com tortas inteiras tradicionais (como de{" "}
+                  <strong className="text-brand-heading">marshmallow / chantininho</strong> quanto com tortas inteiras tradicionais (como de{" "}
                   <strong className="text-brand-heading">brigadeiro, chocolate ou doce de leite</strong>), com diversas opções de recheios — como brigadeiro preto e branco, doce de leite e outras combinações definidas diretamente com a Tânia mediante consulta.
                 </p>
 
@@ -1668,7 +1345,6 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Destaques Ilustrativos das Possibilidades */}
               <div className="lg:col-span-5 bg-brand-surface-subtle rounded-2xl sm:rounded-3xl p-4 sm:p-7 border border-brand-border space-y-3 sm:space-y-4">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-brand-primary/15 text-brand-primary flex items-center justify-center shrink-0">
@@ -1689,7 +1365,7 @@ export default function Home() {
                     <strong className="text-brand-heading block mb-0.5">
                       ✦ Estilo & Cobertura
                     </strong>
-                    Acabamento em chantilly/chantininho ou tortas inteiramente de brigadeiro, doce de leite ou chocolate.
+                    Acabamento em marshmallow/chantininho ou tortas inteiramente de brigadeiro, doce de leite ou chocolate.
                   </div>
 
                   <div className="p-3 rounded-xl bg-brand-card border border-brand-border">
@@ -1769,7 +1445,7 @@ export default function Home() {
                   Escolha seus favoritos
                 </h3>
                 <p className="text-xs sm:text-sm text-brand-muted leading-relaxed">
-                  Toque nos botões <strong>+10, +25 ou +50</strong> nos produtos desejados para montar sua pré-lista de orçamento.
+                  Toque nos botões <strong>+10, +50 ou +100</strong> nos produtos desejados para montar sua pré-lista de orçamento.
                 </p>
               </div>
 
@@ -1858,7 +1534,7 @@ export default function Home() {
                     Sua lista ainda está vazia
                   </p>
                   <p className="text-xs sm:text-sm text-brand-muted mt-1 max-w-xs mx-auto leading-relaxed">
-                    Toque nos botões <strong>+10, +25 ou +50</strong> nos itens do cardápio para montar seu pedido e enviar tudo pelo WhatsApp.
+                    Toque nos botões <strong>+10, +50 ou +100</strong> nos itens do cardápio para montar seu pedido e enviar tudo pelo WhatsApp.
                   </p>
                 </div>
               ) : (
@@ -1952,12 +1628,12 @@ export default function Home() {
                                     entry.category,
                                     entry.unitLabel,
                                     entry.stepQty,
-                                    25
+                                    50
                                   )
                                 }
                                 className="px-2.5 py-1.5 rounded-lg bg-brand-card hover:bg-brand-primary text-brand-heading hover:text-white text-xs font-bold border border-brand-border cursor-pointer"
                               >
-                                +25
+                                +50
                               </button>
                               <button
                                 type="button"
@@ -1967,12 +1643,12 @@ export default function Home() {
                                     entry.category,
                                     entry.unitLabel,
                                     entry.stepQty,
-                                    50
+                                    100
                                   )
                                 }
                                 className="px-2.5 py-1.5 rounded-lg bg-brand-card hover:bg-brand-primary text-brand-heading hover:text-white text-xs font-bold border border-brand-border cursor-pointer"
                               >
-                                +50
+                                +100
                               </button>
                             </div>
                           )}
@@ -2016,7 +1692,7 @@ export default function Home() {
         </div>
       )}
 
-      {/* 6. BARRA INFERIOR FIXA (ESTILO APP DE DELIVERY NO CELULAR) */}
+      {/* 6. BARRA INFERIOR FIXA */}
       {cartEntries.length > 0 ? (
         <div className="fixed bottom-3 left-3 right-3 sm:left-auto sm:right-6 sm:bottom-6 z-40 flex items-center justify-between gap-2 bg-brand-espresso text-[#FFFDF9] p-2 sm:p-2.5 rounded-2xl sm:rounded-full shadow-2xl border border-white/15">
           <button
