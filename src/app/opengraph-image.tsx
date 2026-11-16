@@ -73,7 +73,7 @@ export default function OpenGraphImage() {
               marginBottom: "12px",
             }}
           >
-            ★ Receitas de Família • Feito à Mão ★
+            Receitas de Família • Feito à Mão
           </div>
 
           <div
